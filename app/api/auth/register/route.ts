@@ -10,12 +10,14 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createClient()
+    const origin = new URL(request.url).origin
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
 
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        emailRedirectTo: `${siteUrl}/auth/callback`,
         data: {
           first_name: firstName,
           last_name: lastName,
