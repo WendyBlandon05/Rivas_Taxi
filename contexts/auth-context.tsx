@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react"
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react"
 import { createClient } from "@/lib/supabase/client"
 import type { User, Session } from "@supabase/supabase-js"
 
@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const isSigningOutRef = useRef(false)
   const supabase = createClient()
 
   const fetchProfile = async (userId: string) => {
@@ -96,10 +97,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    if (isSigningOutRef.current) return
+    isSigningOutRef.current = true
+
     setUser(null)
     setProfile(null)
     setSession(null)
+    localStorage.removeItem("userName")
+    localStorage.removeItem("userEmail")
+    localStorage.removeItem("userPhone")
+
+    try {
+      await Promise.allSettled([
+        supabase.auth.signOut(),
+        fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "include",
+        }),
+      ])
+    } finally {
+      isSigningOutRef.current = false
+    }
   }
 
   const refreshProfile = async () => {

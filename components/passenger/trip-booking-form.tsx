@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { MapPin, Calendar, Clock, Users, Car, FileText, Tag, Percent, Loader2, Map } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -11,6 +11,8 @@ import { LocationPicker } from "@/components/passenger/location-picker"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { NameInput } from "@/components/ui/name-input"
 import type { TripData } from "@/app/trips/page"
+import { useAuth } from "@/contexts/auth-context"
+import { useLanguage } from "@/contexts/language-context"
 
 interface Location {
   lat: number
@@ -28,10 +30,10 @@ interface Destination {
 }
 
 const SERVICE_TYPES = [
-  { id: "turistico", name: "Servicio Turistico", description: "Tours y traslados a destinos turisticos" },
-  { id: "interdepartamental", name: "Viajes Interdepartamentales", description: "Traslados entre departamentos" },
-  { id: "local", name: "Traslados Locales", description: "Movilidad rapida dentro de Rivas" },
-  { id: "programada", name: "Recogida Programada", description: "Recogida en hoteles, terminales o aeropuertos" }
+  { id: "turistico", nameKey: "booking.service.turistico.name", descriptionKey: "booking.service.turistico.description" },
+  { id: "interdepartamental", nameKey: "booking.service.interdepartamental.name", descriptionKey: "booking.service.interdepartamental.description" },
+  { id: "local", nameKey: "booking.service.local.name", descriptionKey: "booking.service.local.description" },
+  { id: "programada", nameKey: "booking.service.programada.name", descriptionKey: "booking.service.programada.description" }
 ]
 
 const PRICE_PER_KM = 1.5 // USD per km
@@ -53,8 +55,30 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c
 }
 
+function isValidFullName(value: string) {
+  const trimmed = value.trim()
+  return trimmed.length >= 3 && !/\d/.test(trimmed) && trimmed.split(/\s+/).filter(Boolean).length >= 2
+}
+
+function isValidPhone(value: string) {
+  const digits = value.replace(/\D/g, "")
+  return digits.length >= 8
+}
+
+function getTomorrowDateInput() {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const year = tomorrow.getFullYear()
+  const month = String(tomorrow.getMonth() + 1).padStart(2, "0")
+  const day = String(tomorrow.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
 export function TripBookingForm({ onBook }: TripBookingFormProps) {
+  const router = useRouter()
   const searchParams = useSearchParams()
+  const { user, profile, isLoading: authLoading } = useAuth()
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
   const [couponApplied, setCouponApplied] = useState<string | null>(null)
@@ -70,17 +94,45 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
   const [originLocation, setOriginLocation] = useState<Location | null>(null)
   const [destinationLocation, setDestinationLocation] = useState<Location | null>(null)
   const [date, setDate] = useState("")
+  const [minTripDate, setMinTripDate] = useState("")
   const [time, setTime] = useState("")
   const [passengers, setPassengers] = useState("1")
   const [serviceType, setServiceType] = useState("")
   const [notes, setNotes] = useState("")
 
-  // Cargar datos del localStorage
+  // Cargar datos del perfil de la cuenta o localStorage
   useEffect(() => {
+    const profileName = profile?.full_name?.trim()
+    const profilePhone = profile?.phone?.trim()
+
+    if (profileName) {
+      setName(profileName)
+      setNameValid(isValidFullName(profileName))
+    }
+
+    if (profilePhone) {
+      setPhone(profilePhone)
+      setPhoneValid(isValidPhone(profilePhone))
+    }
+
+    if (profileName || profilePhone) return
+
     const savedName = localStorage.getItem("userName")
     const savedPhone = localStorage.getItem("userPhone")
-    if (savedName) setName(savedName)
-    if (savedPhone) setPhone(savedPhone)
+    if (savedName) {
+      setName(savedName)
+      setNameValid(isValidFullName(savedName))
+    }
+    if (savedPhone) {
+      setPhone(savedPhone)
+      setPhoneValid(isValidPhone(savedPhone))
+    }
+  }, [profile])
+
+  useEffect(() => {
+    const tomorrow = getTomorrowDateInput()
+    setMinTripDate(tomorrow)
+    setDate((currentDate) => currentDate || tomorrow)
   }, [])
 
   // Cargar tipo de servicio desde URL params
@@ -138,8 +190,9 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
       const data = await response.json()
       
       if (response.ok && data.valid) {
+        const discountPercentage = Number(data.discount_percentage ?? data.discountPercentage ?? 0)
         setCouponApplied(code)
-        setCouponDiscount(data.discount_percentage)
+        setCouponDiscount(discountPercentage)
         setCouponError("")
       } else {
         setCouponError(data.error || "Cupon invalido o expirado")
@@ -162,6 +215,17 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (authLoading) {
+      setSubmitError("Estamos verificando tu sesion. Intenta de nuevo en un momento.")
+      return
+    }
+
+    if (!user) {
+      setSubmitError("Para tu mayor seguridad debes registrarte o iniciar sesion antes de reservar un viaje.")
+      router.push("/register?reason=booking")
+      return
+    }
     
     // Validate all required fields
     if (!nameValid) {
@@ -208,7 +272,8 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
           tripTime: time,
           notes: notes || null,
           passengerName: name,
-          passengerPhone: phone
+          passengerPhone: phone,
+          passengerEmail: user.email || profile?.email
         })
       })
       
@@ -246,19 +311,17 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
     }
   }
 
-  const today = new Date().toISOString().split('T')[0]
-
   return (
     <div className="max-w-2xl mx-auto">
       <div className="shadow-lg rounded-lg overflow-hidden bg-white border">
         <div className="bg-[#1a5276] text-white px-6 py-4">
           <h2 className="flex items-center gap-2 font-semibold text-xl">
             <Car className="w-6 h-6" />
-            Formulario de Reservacion
+            {t("booking.formTitle")}
           </h2>
           <p className="text-sm text-blue-100 mt-1 flex items-center gap-1">
             <Map className="w-4 h-4" />
-            Selecciona origen y destino en el mapa
+            {t("booking.formSubtitle")}
           </p>
         </div>
         <div className="p-6">
@@ -271,7 +334,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
 
             {/* Service Type Selection */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-[#1a5276] border-b pb-2">Tipo de Servicio</h3>
+              <h3 className="font-semibold text-[#1a5276] border-b pb-2">{t("booking.serviceType")}</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {SERVICE_TYPES.map((service) => (
                   <button
@@ -285,20 +348,20 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     }`}
                   >
                     <Car className={`w-6 h-6 mx-auto mb-1 ${serviceType === service.id ? "text-amber-500" : "text-gray-400"}`} />
-                    <p className="text-xs font-medium leading-tight">{service.name}</p>
+                    <p className="text-xs font-medium leading-tight">{t(service.nameKey)}</p>
                   </button>
                 ))}
               </div>
               {serviceType && (
                 <p className="text-sm text-gray-500 bg-gray-50 p-2 rounded">
-                  {SERVICE_TYPES.find(s => s.id === serviceType)?.description}
+                  {t(SERVICE_TYPES.find(s => s.id === serviceType)?.descriptionKey || "")}
                 </p>
               )}
             </div>
 
             {/* Personal Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-[#1a5276] border-b pb-2">Informacion Personal</h3>
+              <h3 className="font-semibold text-[#1a5276] border-b pb-2">{t("booking.personalInfo")}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <NameInput
@@ -308,12 +371,12 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     setNameValid(isValid)
                   }}
                   required
-                  label="Nombre Completo"
+                  label={t("booking.fullName")}
                   placeholder="Juan Perez"
                 />
 
                 <div className="space-y-2">
-                  <Label>Telefono <span className="text-red-500">*</span></Label>
+                  <Label>{t("booking.phone")} <span className="text-red-500">*</span></Label>
                   <PhoneInput
                     value={phone}
                     onChange={(value, isValid) => {
@@ -330,7 +393,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
             <div className="space-y-4">
               <h3 className="font-semibold text-[#1a5276] border-b pb-2 flex items-center gap-2">
                 <Map className="w-4 h-4" />
-                Ubicaciones del Viaje
+                {t("booking.locations")}
               </h3>
               
               <div className="grid grid-cols-1 gap-4">
@@ -339,8 +402,8 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                   type="origin"
                   value={originLocation}
                   onChange={setOriginLocation}
-                  label="Punto de Origen"
-                  placeholder="Selecciona tu ubicacion de recogida..."
+                  label={t("booking.origin")}
+                  placeholder={t("booking.originPlaceholder")}
                 />
 
                 {/* Destination Location Picker */}
@@ -348,8 +411,8 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                   type="destination"
                   value={destinationLocation}
                   onChange={setDestinationLocation}
-                  label="Destino"
-                  placeholder="Selecciona tu destino..."
+                  label={t("booking.destination")}
+                  placeholder={t("booking.destinationPlaceholder")}
                 />
               </div>
 
@@ -359,7 +422,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-blue-700 font-medium flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
-                      Distancia estimada:
+                      {t("booking.distance")}
                     </span>
                     <span className="font-bold text-blue-900">{tripDetails.distanceKm} km</span>
                   </div>
@@ -369,14 +432,14 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
               {/* Date, Time, Passengers */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="date">Fecha</Label>
+                  <Label htmlFor="date">{t("booking.date")}</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10" />
                     <input
                       id="date"
                       type="date"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pl-10"
-                      min={today}
+                      min={minTripDate}
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       required
@@ -385,7 +448,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="time">Hora</Label>
+                  <Label htmlFor="time">{t("booking.time")}</Label>
                   <div className="relative">
                     <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10" />
                     <input
@@ -400,7 +463,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="passengers">Pasajeros</Label>
+                  <Label htmlFor="passengers">{t("booking.passengers")}</Label>
                   <div className="relative">
                     <Users className="absolute left-3 top-3 w-4 h-4 text-gray-400 pointer-events-none z-10" />
                     <Select value={passengers} onValueChange={setPassengers}>
@@ -410,7 +473,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                       <SelectContent>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                           <SelectItem key={num} value={num.toString()}>
-                            {num} {num === 1 ? "pasajero" : "pasajeros"}
+                            {num} {num === 1 ? t("booking.passengerSingular") : t("booking.passengerPlural")}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -424,7 +487,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
             <div className="space-y-4">
               <h3 className="font-semibold text-[#1a5276] border-b pb-2 flex items-center gap-2">
                 <Tag className="w-4 h-4" />
-                Cupon de Descuento
+                {t("booking.coupon")}
               </h3>
               
               {couponApplied ? (
@@ -432,7 +495,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                   <div className="flex items-center gap-2">
                     <Percent className="w-5 h-5 text-green-600" />
                     <span className="font-medium text-green-700">
-                      Cupon {couponApplied} aplicado - {couponDiscount}% de descuento
+                      {t("booking.coupon")} {couponApplied} {t("booking.couponApplied")} - {couponDiscount}% {t("booking.discount")}
                     </span>
                   </div>
                   <button
@@ -440,7 +503,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     onClick={handleRemoveCoupon}
                     className="text-red-500 hover:text-red-700 text-sm font-medium"
                   >
-                    Quitar
+                    {t("booking.remove")}
                   </button>
                 </div>
               ) : (
@@ -449,7 +512,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10" />
                     <input
                       type="text"
-                      placeholder="Ingresa tu codigo de cupon"
+                      placeholder={t("booking.couponPlaceholder")}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pl-10 uppercase"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
@@ -461,7 +524,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     onClick={handleApplyCoupon}
                     disabled={!couponCode.trim() || validatingCoupon}
                   >
-                    {validatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Aplicar"}
+                    {validatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : t("booking.apply")}
                   </Button>
                 </div>
               )}
@@ -469,18 +532,18 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                 <p className="text-red-500 text-sm">{couponError}</p>
               )}
               <p className="text-xs text-gray-500">
-                Cupones disponibles: BIENVENIDO10, PACIFIC15, VERANO20, TURISTA10, AEROPUERTO15
+                {t("booking.availableCoupons")} BIENVENIDO10, PACIFIC15, VERANO20, TURISTA10, AEROPUERTO15
               </p>
             </div>
 
             {/* Additional Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes">Notas Adicionales (opcional)</Label>
+              <Label htmlFor="notes">{t("booking.notes")}</Label>
               <div className="relative">
                 <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400 pointer-events-none z-10" />
                 <Textarea
                   id="notes"
-                  placeholder="Equipaje extra, necesidades especiales, instrucciones de recogida..."
+                  placeholder={t("booking.notesPlaceholder")}
                   className="pl-10 min-h-[100px]"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -492,7 +555,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Precio estimado:</p>
+                  <p className="text-sm text-gray-600 mb-1">{t("booking.estimatedPrice")}</p>
                   {tripDetails ? (
                     couponApplied ? (
                       <div>
@@ -503,7 +566,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                           ${finalPrice?.toFixed(2)} USD
                         </p>
                         <p className="text-xs text-green-600">
-                          Ahorraste ${(tripDetails.estimatedPrice - (finalPrice || 0)).toFixed(2)} USD
+                          {t("booking.saved")} ${(tripDetails.estimatedPrice - (finalPrice || 0)).toFixed(2)} USD
                         </p>
                       </div>
                     ) : (
@@ -513,7 +576,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     )
                   ) : (
                     <p className="text-lg text-gray-400">
-                      Selecciona origen y destino
+                      {t("booking.selectLocations")}
                     </p>
                   )}
                 </div>
@@ -521,7 +584,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
               </div>
               {tripDetails && (
                 <p className="text-xs text-gray-500 mt-2">
-                  Tarifa base $5.00 + ${PRICE_PER_KM.toFixed(2)}/km
+                  {t("booking.baseFare")} $5.00 + ${PRICE_PER_KM.toFixed(2)}/km
                 </p>
               )}
             </div>
@@ -535,18 +598,18 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Procesando...
+                  {t("booking.processing")}
                 </>
               ) : (
                 <>
                   <Car className="w-5 h-5 mr-2" />
-                  Confirmar Reservacion
+                  {t("booking.confirm")}
                 </>
               )}
             </Button>
 
             <p className="text-xs text-center text-gray-500">
-              Al confirmar, aceptas nuestros terminos y condiciones de servicio.
+              {t("booking.terms")}
             </p>
           </form>
         </div>

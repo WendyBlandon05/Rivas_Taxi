@@ -52,7 +52,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       valid: true,
       discountCode: data.code,
-      discountPercentage: data.discount_percentage
+      discountPercentage: Number(data.discount_percentage),
+      discount_percentage: Number(data.discount_percentage)
     })
   } catch (error) {
     console.error("Error validating discount code:", error)

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Star, Send, X } from "lucide-react"
+import { Star, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -24,33 +24,52 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
   const [comment, setComment] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState("")
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      alert("Por favor selecciona una calificacion")
+      setError("Por favor selecciona una calificacion")
       return
     }
     if (!comment.trim()) {
-      alert("Por favor escribe un comentario")
+      setError("Por favor escribe un comentario")
       return
     }
 
     setIsSubmitting(true)
+    setError("")
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    onSubmit({ rating, comment })
-    setSubmitted(true)
-    setIsSubmitting(false)
-    
-    // Close after showing success
-    setTimeout(() => {
-      setSubmitted(false)
-      setRating(0)
-      setComment("")
-      onClose()
-    }, 2000)
+    try {
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rating,
+          comment: comment.trim(),
+          isDriverReview: false,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "No se pudo enviar la resena")
+      }
+
+      onSubmit({ rating, comment })
+      setSubmitted(true)
+
+      setTimeout(() => {
+        setSubmitted(false)
+        setRating(0)
+        setComment("")
+        onClose()
+      }, 2000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo enviar la resena")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -119,6 +138,12 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
                   {comment.length}/500 caracteres
                 </p>
               </div>
+
+              {error && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3">

@@ -54,6 +54,32 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const pathname = request.nextUrl.pathname
+    const driverBlockedPaths = ['/', '/about', '/contact', '/trips', '/my-trips', '/register', '/login']
+    const isDriverBlockedPath = driverBlockedPaths.some((path) => {
+      if (path === '/') return pathname === '/'
+      return pathname === path || pathname.startsWith(`${path}/`)
+    })
+
+    if (profile?.role === 'driver' && isDriverBlockedPath) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/driver'
+      url.search = ''
+      const redirectResponse = NextResponse.redirect(url)
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie)
+      })
+      return redirectResponse
+    }
+  }
+
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:

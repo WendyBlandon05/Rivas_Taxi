@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Car, Calendar, Clock, MapPin, Users, ChevronRight, History, CalendarClock, AlertCircle, Plus, Star, RefreshCw, XCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Car, Calendar, Clock, MapPin, Users, ChevronRight, History, CalendarClock, AlertCircle, Plus, Star, RefreshCw, XCircle, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
 import { DriverReviewModal } from "@/components/passenger/driver-review-modal"
+import { useAuth } from "@/contexts/auth-context"
 
 interface DriverProfile {
   id: string
@@ -35,6 +36,7 @@ interface Trip {
   destination_address: string
   trip_date: string
   trip_time: string
+  estimated_duration_minutes: number | null
   passengers: number
   service_type: string
   status: string
@@ -46,37 +48,43 @@ interface Trip {
   passenger_phone: string
   driver_id: string | null
   driver: Driver | null
+  driver_reviews?: Array<{
+    id: string
+    rating: number
+    comment: string | null
+    created_at: string
+  }>
   created_at: string
 }
 
 export default function MyTripsPage() {
+  const router = useRouter()
+  const { user, profile, isLoading: authLoading } = useAuth()
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [email, setEmail] = useState("")
-  const [emailSubmitted, setEmailSubmitted] = useState(false)
   const [reviewTrip, setReviewTrip] = useState<Trip | null>(null)
 
-  // Check if user has email stored
   useEffect(() => {
-    const storedEmail = localStorage.getItem("userEmail")
-    if (storedEmail) {
-      setEmail(storedEmail)
-      setEmailSubmitted(true)
-      fetchTrips(storedEmail)
-    }
-  }, [])
+    if (authLoading) return
 
-  const fetchTrips = async (userEmail: string) => {
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    fetchTrips()
+  }, [authLoading, user, router])
+
+  const fetchTrips = async () => {
     setLoading(true)
     setError("")
     try {
-      const response = await fetch(`/api/trips?email=${encodeURIComponent(userEmail)}`)
+      const response = await fetch("/api/trips")
       const data = await response.json()
       
       if (response.ok) {
         setTrips(data.trips || [])
-        localStorage.setItem("userEmail", userEmail)
       } else {
         setError(data.error || "Error al cargar viajes")
       }
@@ -84,14 +92,6 @@ export default function MyTripsPage() {
       setError("Error de conexion")
     }
     setLoading(false)
-  }
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email.trim()) {
-      setEmailSubmitted(true)
-      fetchTrips(email)
-    }
   }
 
   const handleCancelTrip = async (tripId: string) => {
@@ -108,7 +108,7 @@ export default function MyTripsPage() {
       })
       
       if (response.ok) {
-        fetchTrips(email)
+        fetchTrips()
       }
     } catch (err) {
       console.error("Error cancelling trip:", err)
@@ -142,11 +142,18 @@ export default function MyTripsPage() {
     })
   }
 
+  const getDriverName = (trip: Trip) => {
+    return trip.driver?.profile?.full_name?.trim() || "Conductor asignado"
+  }
+
+  const getTripReview = (trip: Trip) => {
+    return trip.driver_reviews?.[0] || null
+  }
+
   const upcomingTrips = trips.filter(t => ['pending', 'confirmed', 'in_progress'].includes(t.status))
   const pastTrips = trips.filter(t => ['completed', 'cancelled'].includes(t.status))
 
-  // Email input form
-  if (!emailSubmitted) {
+  if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="bg-[#1a5276] text-white py-8">
@@ -158,30 +165,15 @@ export default function MyTripsPage() {
               <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
             </Link>
             <h1 className="text-3xl font-bold mt-4">Mis Viajes</h1>
-            <p className="text-blue-100 mt-1">Ingresa tu correo para ver tus viajes</p>
+            <p className="text-blue-100 mt-1">Verificando tu sesion...</p>
           </div>
         </div>
 
         <div className="container mx-auto px-4 py-8 max-w-md">
-          <Card>
-            <CardContent className="p-6">
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Correo electronico
-                  </label>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tu@email.com"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-[#1a5276] hover:bg-[#154360]">
-                  Ver mis viajes
-                </Button>
-              </form>
+          <Card className="text-center py-8">
+            <CardContent>
+              <RefreshCw className="w-8 h-8 animate-spin text-[#1a5276] mx-auto mb-4" />
+              <p className="text-gray-600">Cargando tus viajes...</p>
             </CardContent>
           </Card>
         </div>
@@ -202,11 +194,11 @@ export default function MyTripsPage() {
           </Link>
           <h1 className="text-3xl font-bold mt-4">Mis Viajes</h1>
           <div className="flex items-center justify-between mt-1">
-            <p className="text-blue-100">{email}</p>
+            <p className="text-blue-100">{profile?.full_name || user.email}</p>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => fetchTrips(email)}
+              onClick={() => fetchTrips()}
               className="text-white hover:bg-white/10"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
@@ -226,7 +218,7 @@ export default function MyTripsPage() {
             <CardContent>
               <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
               <p className="text-red-600">{error}</p>
-              <Button onClick={() => fetchTrips(email)} className="mt-4">
+              <Button onClick={() => fetchTrips()} className="mt-4">
                 Reintentar
               </Button>
             </CardContent>
@@ -318,6 +310,10 @@ export default function MyTripsPage() {
                                 {trip.trip_time || "Sin hora"}
                               </div>
                               <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Clock className="w-4 h-4" />
+                                {trip.estimated_duration_minutes || 30} min aprox.
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
                                 <Users className="w-4 h-4" />
                                 {trip.passengers} {trip.passengers === 1 ? "pasajero" : "pasajeros"}
                               </div>
@@ -356,7 +352,7 @@ export default function MyTripsPage() {
                               <div>
                                 <p className="text-xs text-gray-500 mb-2">Conductor asignado</p>
                                 <p className="font-semibold text-[#1a5276]">
-                                  {trip.driver.profile?.full_name || "Conductor"}
+                                  {getDriverName(trip)}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   {trip.driver.vehicle_brand} {trip.driver.vehicle_model} {trip.driver.vehicle_year}
@@ -451,6 +447,10 @@ export default function MyTripsPage() {
                                 {trip.trip_time || "Sin hora"}
                               </div>
                               <div className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {trip.estimated_duration_minutes || 30} min aprox.
+                              </div>
+                              <div className="flex items-center gap-1">
                                 <Users className="w-4 h-4" />
                                 {trip.passengers}
                               </div>
@@ -460,30 +460,70 @@ export default function MyTripsPage() {
                               ${trip.final_price?.toFixed(2) || trip.estimated_price?.toFixed(2)} USD
                             </p>
 
-                            {/* Review button for completed trips */}
-                            {trip.status === 'completed' && trip.driver && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="mt-3"
-                                onClick={() => setReviewTrip(trip)}
-                              >
-                                <Star className="w-4 h-4 mr-2" />
-                                Calificar viaje
-                              </Button>
+                            {trip.status === 'completed' && getTripReview(trip)?.comment && (
+                              <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-gray-700">
+                                <div className="mb-1 flex items-center gap-2 font-semibold text-[#1a5276]">
+                                  <MessageSquare className="h-4 w-4" />
+                                  Tu comentario
+                                </div>
+                                <p>{getTripReview(trip)?.comment}</p>
+                              </div>
                             )}
                           </div>
 
                           {/* Driver Info (compact for history) */}
                           {trip.driver && (
-                            <div className="bg-gray-50 p-4 md:w-48 border-t md:border-t-0 md:border-l flex items-center justify-center">
-                              <div className="text-center">
+                            <div className="bg-gray-50 p-4 md:w-64 border-t md:border-t-0 md:border-l flex items-center justify-center">
+                              <div className="text-center w-full">
                                 <p className="text-xs text-gray-500">Conductor</p>
-                                <p className="font-medium text-sm">{trip.driver.profile?.full_name || "Conductor"}</p>
+                                <p className="font-semibold text-[#1a5276]">{getDriverName(trip)}</p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {trip.driver.vehicle_brand} {trip.driver.vehicle_model}
+                                </p>
                                 <div className="flex items-center justify-center gap-1 mt-1">
                                   <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                                  <span className="text-xs">{trip.driver.rating || 5.0}</span>
+                                  <span className="text-xs font-medium">{Number(trip.driver.rating || 5).toFixed(2)}</span>
+                                  <span className="text-xs text-gray-500">promedio</span>
                                 </div>
+                                {trip.status === 'completed' && (
+                                  <div className="mt-3">
+                                    {getTripReview(trip) ? (
+                                      <div className="rounded-lg bg-white border p-3">
+                                        <p className="text-xs text-gray-500 mb-1">Tu calificacion</p>
+                                        <div className="flex items-center justify-center gap-1">
+                                          {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star
+                                              key={star}
+                                              className={`h-4 w-4 ${
+                                                star <= getTripReview(trip)!.rating
+                                                  ? "fill-amber-400 text-amber-400"
+                                                  : "text-gray-300"
+                                              }`}
+                                            />
+                                          ))}
+                                        </div>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="mt-2 h-8 w-full text-[#1a5276] hover:bg-blue-50"
+                                          onClick={() => setReviewTrip(trip)}
+                                        >
+                                          Editar resena
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="w-full border-[#1a5276] text-[#1a5276] hover:bg-blue-50"
+                                        onClick={() => setReviewTrip(trip)}
+                                      >
+                                        <Star className="w-4 h-4 mr-2" />
+                                        Calificar conductor
+                                      </Button>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           )}
@@ -506,9 +546,11 @@ export default function MyTripsPage() {
           tripId={reviewTrip.id}
           driverId={reviewTrip.driver.id}
           driverName={reviewTrip.driver.profile?.full_name || "Conductor"}
+          initialRating={getTripReview(reviewTrip)?.rating || 5}
+          initialComment={getTripReview(reviewTrip)?.comment || ""}
           onSuccess={() => {
             setReviewTrip(null)
-            fetchTrips(email)
+            fetchTrips()
           }}
         />
       )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, Car } from "lucide-react"
@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/auth-context"
 export default function RegisterPage() {
   const router = useRouter()
   const { signUp } = useAuth()
+  const [registrationReason, setRegistrationReason] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -29,6 +30,10 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: ""
   })
+
+  useEffect(() => {
+    setRegistrationReason(new URLSearchParams(window.location.search).get("reason"))
+  }, [])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -57,9 +62,11 @@ export default function RegisterPage() {
     
     try {
       const { error: signUpError } = await signUp(formData.email, formData.password, {
+        full_name: `${formData.firstName} ${formData.lastName}`.trim(),
         first_name: formData.firstName,
         last_name: formData.lastName,
         phone: formData.phone,
+        location: formData.location,
         role: "passenger"
       })
       
@@ -109,6 +116,12 @@ export default function RegisterPage() {
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                   {error}
+                </div>
+              )}
+
+              {registrationReason === "booking" && !success && (
+                <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm">
+                  Para tu mayor seguridad debes registrarte antes de reservar un viaje. Asi podremos asociar la reserva a tu cuenta y darte seguimiento.
                 </div>
               )}
               

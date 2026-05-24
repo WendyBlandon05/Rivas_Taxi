@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Menu, X, Car, LogIn, Star, User, LogOut } from "lucide-react"
@@ -14,35 +14,25 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ReviewForm } from "./review-form"
 import { useAuth } from "@/contexts/auth-context"
+import { useLanguage } from "@/contexts/language-context"
 
 export function Header() {
   const router = useRouter()
   const { user, profile, signOut, isLoading } = useAuth()
+  const { language, toggleLanguage, t } = useLanguage()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showReviewForm, setShowReviewForm] = useState(false)
   
-  // Also check localStorage for guest users who booked without account
-  const [guestName, setGuestName] = useState("")
-  
-  useEffect(() => {
-    const savedName = localStorage.getItem("userName")
-    if (savedName) setGuestName(savedName)
-  }, [])
-
-  const isLoggedIn = !!user || !!guestName
+  const isLoggedIn = !!user
   const userName = profile?.first_name 
     ? `${profile.first_name} ${profile.last_name || ""}`.trim()
     : user?.email?.split("@")[0] 
-    || guestName 
     || ""
 
   const handleLogout = async () => {
     await signOut()
-    localStorage.removeItem("userName")
-    localStorage.removeItem("userEmail")
-    localStorage.removeItem("userPhone")
-    setGuestName("")
-    router.push("/")
+    router.replace("/")
+    router.refresh()
   }
 
   const handleReviewSubmit = (review: { rating: number; comment: string }) => {
@@ -68,38 +58,46 @@ export function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6">
               <Link href="/" className="text-white hover:text-amber-400 transition-colors font-medium">
-                INICIO
+                {t("nav.home")}
               </Link>
               <Link href="/about" className="text-white hover:text-amber-400 transition-colors font-medium">
-                NOSOTROS
+                {t("nav.about")}
               </Link>
               <Link href="#servicios" className="text-white hover:text-amber-400 transition-colors font-medium">
-                SERVICIOS
+                {t("nav.services")}
               </Link>
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                className="text-white hover:text-amber-400 transition-colors font-bold border border-white/40 rounded-full px-3 py-1 text-sm"
+                aria-label={t("language.label")}
+              >
+                {language === "es" ? "EN" : "ES"}
+              </button>
               
               {isLoggedIn ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold px-4 py-2 rounded-full flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      {userName || "Mi Cuenta"}
+                      {userName || t("nav.account")}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
                       <Link href="/my-trips" className="cursor-pointer">
                         <Car className="w-4 h-4 mr-2" />
-                        Mis Viajes
+                        {t("nav.myTrips")}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowReviewForm(true)} className="cursor-pointer">
                       <Star className="w-4 h-4 mr-2 text-amber-500" />
-                      Dejar Resena
+                      {t("nav.review")}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
                       <LogOut className="w-4 h-4 mr-2" />
-                      Cerrar Sesion
+                      {t("nav.logout")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -107,14 +105,14 @@ export function Header() {
                 <Link href="/login">
                   <Button variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold px-4 py-2 rounded-full flex items-center gap-2">
                     <LogIn className="w-4 h-4" />
-                    INICIAR SESION
+                    {t("nav.login")}
                   </Button>
                 </Link>
               )}
               
               <Link href="/trips?service=turistico">
                 <Button className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-2 rounded-full">
-                  RESERVA TU VIAJE
+                  {t("nav.book")}
                 </Button>
               </Link>
             </nav>
@@ -138,22 +136,30 @@ export function Header() {
                   className="text-white hover:text-amber-400 transition-colors font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  INICIO
+                  {t("nav.home")}
                 </Link>
                 <Link 
                   href="/about" 
                   className="text-white hover:text-amber-400 transition-colors font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  NOSOTROS
+                  {t("nav.about")}
                 </Link>
                 <Link 
                   href="#servicios" 
                   className="text-white hover:text-amber-400 transition-colors font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  SERVICIOS
+                  {t("nav.services")}
                 </Link>
+                <button
+                  type="button"
+                  onClick={toggleLanguage}
+                  className="text-white hover:text-amber-400 transition-colors font-bold py-2 text-left"
+                  aria-label={t("language.label")}
+                >
+                  {t("language.label")}: {language === "es" ? "English" : "Español"}
+                </button>
                 
                 {isLoggedIn ? (
                   <>
@@ -163,7 +169,7 @@ export function Header() {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <Car className="w-4 h-4" />
-                      MIS VIAJES
+                      {t("nav.myTrips").toUpperCase()}
                     </Link>
                     <button
                       onClick={() => {
@@ -173,7 +179,7 @@ export function Header() {
                       className="text-white hover:text-amber-400 transition-colors font-medium py-2 flex items-center gap-2 text-left"
                     >
                       <Star className="w-4 h-4 text-amber-400" />
-                      DEJAR RESENA
+                      {t("nav.review").toUpperCase()}
                     </button>
                     <button
                       onClick={() => {
@@ -183,21 +189,21 @@ export function Header() {
                       className="text-red-400 hover:text-red-300 transition-colors font-medium py-2 flex items-center gap-2 text-left"
                     >
                       <LogOut className="w-4 h-4" />
-                      CERRAR SESION
+                      {t("nav.logout").toUpperCase()}
                     </button>
                   </>
                 ) : (
                   <Link href="/login" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold px-6 py-2 rounded-full w-full flex items-center justify-center gap-2">
                       <LogIn className="w-4 h-4" />
-                      INICIAR SESION
+                      {t("nav.login")}
                     </Button>
                   </Link>
                 )}
                 
                 <Link href="/trips?service=turistico" onClick={() => setIsMenuOpen(false)}>
                   <Button className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-2 rounded-full w-full">
-                    RESERVA TU VIAJE
+                    {t("nav.book")}
                   </Button>
                 </Link>
               </div>

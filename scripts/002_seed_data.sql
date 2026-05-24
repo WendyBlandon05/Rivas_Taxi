@@ -21,7 +21,7 @@ INSERT INTO public.destinations (name, description, distance_km, price_usd, is_p
   ('Rivas Centro', 'Local city center', 5.00, 25.00, FALSE),
   ('Moyogalpa (Puerto)', 'Ferry port to Ometepe', 48.00, 240.00, FALSE),
   ('La Virgen', 'Lakeside town', 20.00, 100.00, FALSE)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (name) DO NOTHING;
 
 -- =====================================================
 -- DISCOUNT CODES
@@ -31,7 +31,9 @@ INSERT INTO public.discount_codes (code, discount_percentage, max_uses, valid_un
   ('BIENVENIDO10', 10, 100, NOW() + INTERVAL '1 year', TRUE),
   ('PACIFIC15', 15, 50, NOW() + INTERVAL '6 months', TRUE),
   ('VERANO20', 20, 30, NOW() + INTERVAL '3 months', TRUE),
+  ('TURISTA10', 10, 100, NOW() + INTERVAL '1 year', TRUE),
+  ('AEROPUERTO15', 15, NULL, NOW() + INTERVAL '1 year', TRUE),
   ('PROMO25', 25, 20, NOW() + INTERVAL '1 month', TRUE),
   ('SURFTRIP', 15, NULL, NOW() + INTERVAL '1 year', TRUE),
   ('AEROPUERTO10', 10, NULL, NOW() + INTERVAL '1 year', TRUE)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (code) DO NOTHING;

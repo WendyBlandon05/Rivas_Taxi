@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { ChevronDown, Phone } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 // Country codes with phone number length requirements
 const COUNTRY_CODES = [
@@ -27,6 +28,7 @@ interface PhoneInputProps {
 
 export function PhoneInput({ value, onChange, required = false, className = "", error }: PhoneInputProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useLanguage()
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]) // Default Nicaragua
   const [phoneNumber, setPhoneNumber] = useState("")
   const [touched, setTouched] = useState(false)
@@ -44,8 +46,10 @@ export function PhoneInput({ value, onChange, required = false, className = "", 
         // Just extract digits
         setPhoneNumber(value.replace(/\D/g, ""))
       }
+    } else {
+      setPhoneNumber("")
     }
-  }, [])
+  }, [value])
 
   // Format phone number for display
   const formattedNumber = useMemo(() => {
@@ -78,25 +82,25 @@ export function PhoneInput({ value, onChange, required = false, className = "", 
     const isEmpty = digits.length === 0
     
     if (isEmpty && required) {
-      return { isValid: false, message: "El telefono es obligatorio" }
+      return { isValid: false, message: t("booking.phoneRequired") }
     }
     
     if (!isEmpty && digits.length < selectedCountry.digits) {
       return { 
         isValid: false, 
-        message: `Faltan ${selectedCountry.digits - digits.length} digitos. ${selectedCountry.name} requiere ${selectedCountry.digits} digitos` 
+        message: `${t("booking.phoneMissing")} ${selectedCountry.digits - digits.length} ${t("booking.digits")}. ${selectedCountry.name} ${t("booking.phoneRequires")} ${selectedCountry.digits} ${t("booking.digits")}` 
       }
     }
     
     if (!isEmpty && digits.length > selectedCountry.digits) {
       return { 
         isValid: false, 
-        message: `Sobran ${digits.length - selectedCountry.digits} digitos. ${selectedCountry.name} requiere ${selectedCountry.digits} digitos` 
+        message: `${t("booking.phoneExtra")} ${digits.length - selectedCountry.digits} ${t("booking.digits")}. ${selectedCountry.name} ${t("booking.phoneRequires")} ${selectedCountry.digits} ${t("booking.digits")}` 
       }
     }
     
     return { isValid: true, message: "" }
-  }, [phoneNumber, selectedCountry, required])
+  }, [phoneNumber, selectedCountry, required, t])
 
   // Handle phone number input - only allow digits
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,7 +164,7 @@ export function PhoneInput({ value, onChange, required = false, className = "", 
                     <span className="text-lg">{country.flag}</span>
                     <div className="flex-1">
                       <p className="text-sm font-medium">{country.name}</p>
-                      <p className="text-xs text-gray-500">{country.code} ({country.digits} digitos)</p>
+                      <p className="text-xs text-gray-500">{country.code} ({country.digits} {t("booking.digits")})</p>
                     </div>
                   </button>
                 ))}
@@ -197,7 +201,7 @@ export function PhoneInput({ value, onChange, required = false, className = "", 
       {/* Helper text */}
       {!touched && (
         <p className="text-gray-500 text-xs">
-          Formato para {selectedCountry.name}: {selectedCountry.code} {selectedCountry.format}
+          {t("booking.formatFor")} {selectedCountry.name}: {selectedCountry.code} {selectedCountry.format}
         </p>
       )}
       

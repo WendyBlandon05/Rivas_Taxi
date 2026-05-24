@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,8 @@ interface DriverReviewModalProps {
   tripId: string
   driverId: string
   driverName: string
+  initialRating?: number
+  initialComment?: string
   onSuccess: () => void
 }
 
@@ -29,32 +31,37 @@ export function DriverReviewModal({
   tripId,
   driverId,
   driverName,
+  initialRating = 5,
+  initialComment = "",
   onSuccess
 }: DriverReviewModalProps) {
-  const [rating, setRating] = useState(5)
+  const [rating, setRating] = useState(initialRating)
   const [hoveredRating, setHoveredRating] = useState(0)
-  const [comment, setComment] = useState("")
+  const [comment, setComment] = useState(initialComment)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) return
+    setRating(initialRating)
+    setComment(initialComment)
+    setHoveredRating(0)
+    setError("")
+    setSuccess(false)
+  }, [isOpen, initialRating, initialComment])
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
     setError("")
     
     try {
-      // Get user name from localStorage
-      const userName = localStorage.getItem("userName") || "Pasajero"
-      const userEmail = localStorage.getItem("userEmail") || ""
-
       const response = await fetch("/api/driver-reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           driverId,
           tripId,
-          passengerName: userName,
-          passengerEmail: userEmail,
           rating,
           comment: comment.trim() || null
         })

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { assertSupabaseAdminEnv } from './env'
 
 /**
  * Admin client with service_role key for privileged operations.
@@ -6,14 +7,9 @@ import { createClient } from '@supabase/supabase-js'
  * Never expose this client to the browser.
  */
 export function createAdminClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const env = assertSupabaseAdminEnv()
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase admin credentials')
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  return createClient(env.url!, env.serviceRoleKey!, {
     auth: {
       autoRefreshToken: false,
       persistSession: false

@@ -1,27 +1,29 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // GET all reviews (with optional filters)
 export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const adminClient = createAdminClient()
     const { searchParams } = new URL(request.url)
     const driverId = searchParams.get("driver_id")
     const tripId = searchParams.get("trip_id")
     const limit = searchParams.get("limit")
+    const minRating = Number(searchParams.get("min_rating") || 0)
+    const serviceOnly = searchParams.get("service_only") === "true"
 
-    let query = supabase
+    let query = adminClient
       .from("reviews")
       .select(`
         *,
-        reviewer:profiles(first_name, last_name, avatar_url),
+        reviewer:profiles(email, full_name, first_name, last_name, avatar_url),
         driver:drivers(
           id,
           vehicle_brand,
           vehicle_model,
           user:profiles(first_name, last_name)
-        ),
-        trip:trips(id, confirmation_code, origin, destination)
+        )
       `)
       .order("created_at", { ascending: false })
 
@@ -33,6 +35,14 @@ export async function GET(request: Request) {
       query = query.eq("trip_id", tripId)
     }
 
+    if (serviceOnly) {
+      query = query.eq("is_driver_review", false)
+    }
+
+    if (minRating > 0) {
+      query = query.gte("rating", minRating)
+    }
+
     if (limit) {
       query = query.limit(parseInt(limit))
     }
@@ -40,6 +50,9 @@ export async function GET(request: Request) {
     const { data, error } = await query
 
     if (error) {
+      if (error.message?.includes("public.reviews") || error.message?.includes("schema cache")) {
+        return NextResponse.json({ reviews: [] })
+      }
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
@@ -61,6 +74,16 @@ export async function POST(request: Request) {
     }
 
     const reviewData = await request.json()
+    const rating = Number(reviewData.rating)
+    const comment = typeof reviewData.comment === "string" ? reviewData.comment.trim() : ""
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return NextResponse.json({ error: "La calificacion debe estar entre 1 y 5" }, { status: 400 })
+    }
+
+    if (!comment) {
+      return NextResponse.json({ error: "El comentario es requerido" }, { status: 400 })
+    }
 
     const { data, error } = await supabase
       .from("reviews")
@@ -68,17 +91,23 @@ export async function POST(request: Request) {
         trip_id: reviewData.tripId || null,
         driver_id: reviewData.driverId || null,
         reviewer_id: user.id,
-        rating: reviewData.rating,
-        comment: reviewData.comment || null,
+        rating,
+        comment,
         is_driver_review: reviewData.isDriverReview ?? (!!reviewData.driverId)
       })
       .select(`
         *,
-        reviewer:profiles(first_name, last_name, avatar_url)
+        reviewer:profiles(email, full_name, first_name, last_name, avatar_url)
       `)
       .single()
 
     if (error) {
+      if (error.message?.includes("public.reviews") || error.message?.includes("schema cache")) {
+        return NextResponse.json(
+          { error: "La tabla de resenas aun no existe. Ejecuta el script 008 en Supabase." },
+          { status: 400 }
+        )
+      }
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 

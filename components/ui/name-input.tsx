@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { User, AlertCircle } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 interface NameInputProps {
   value: string
@@ -23,37 +24,38 @@ export function NameInput({
   minLength = 3
 }: NameInputProps) {
   const [touched, setTouched] = useState(false)
+  const { t } = useLanguage()
 
   // Validation
   const validation = useMemo(() => {
     const trimmed = value.trim()
     
     if (!trimmed && required) {
-      return { isValid: false, message: "El nombre es obligatorio" }
+      return { isValid: false, message: t("booking.nameRequired") }
     }
     
     if (trimmed && trimmed.length < minLength) {
-      return { isValid: false, message: `El nombre debe tener al menos ${minLength} caracteres` }
+      return { isValid: false, message: `${t("booking.nameMin")} ${minLength} ${t("booking.characters")}` }
     }
     
     // Check for numbers
     if (/\d/.test(trimmed)) {
-      return { isValid: false, message: "El nombre no puede contener numeros" }
+      return { isValid: false, message: t("booking.nameNoNumbers") }
     }
     
     // Check for special characters (allow letters, spaces, accents, hyphens, apostrophes)
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-']+$/.test(trimmed) && trimmed.length > 0) {
-      return { isValid: false, message: "El nombre solo puede contener letras" }
+      return { isValid: false, message: t("booking.nameOnlyLetters") }
     }
     
     // Check for at least first and last name (two words)
     const words = trimmed.split(/\s+/).filter(w => w.length > 0)
     if (words.length < 2) {
-      return { isValid: false, message: "Ingresa tu nombre completo (nombre y apellido)" }
+      return { isValid: false, message: t("booking.nameComplete") }
     }
     
     return { isValid: true, message: "" }
-  }, [value, required, minLength])
+  }, [value, required, minLength, t])
 
   // Handle input - filter out numbers as user types
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +128,7 @@ export function NameInput({
       {/* Helper text when not touched */}
       {!touched && (
         <p className="text-gray-500 text-xs">
-          Ingresa tu nombre y apellido (solo letras)
+          {t("booking.nameHelp")}
         </p>
       )}
     </div>

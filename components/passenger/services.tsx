@@ -4,31 +4,32 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Car } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 const services = [
   {
     id: 1,
     serviceId: "interdepartamental",
-    title: "VIAJES INTERDEPARTAMENTALES",
-    description: "RESERVAS SEGURAS HACIA OTROS DESTINOS DE NICARAGUA."
+    titleKey: "services.interdepartamental.title",
+    descriptionKey: "services.interdepartamental.description"
   },
   {
     id: 2,
     serviceId: "turistico",
-    title: "SERVICIO TURISTICO",
-    description: "TRASLADOS COMODOS HACIA PLAYAS, HOTELES Y DESTINOS TURISTICOS."
+    titleKey: "services.turistico.title",
+    descriptionKey: "services.turistico.description"
   },
   {
     id: 3,
     serviceId: "local",
-    title: "TRASLADOS LOCALES",
-    description: "MOVILIDAD RAPIDA DENTRO DE RIVAS CON ATENCION INMEDIATA."
+    titleKey: "services.local.title",
+    descriptionKey: "services.local.description"
   },
   {
     id: 4,
     serviceId: "programada",
-    title: "RECOGIDA PROGRAMADA",
-    description: "DESDE HOTELES, TERMINALES O UBICACION ACORDADA."
+    titleKey: "services.programada.title",
+    descriptionKey: "services.programada.description"
   }
 ]
 
@@ -36,6 +37,8 @@ const services = [
 const travelerImage = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/transparent-Photoroom%20%284%29-GCgWzYLeTOHVONJ3lvicSwkhp1XsZx.png"
 
 export function Services() {
+  const { t } = useLanguage()
+
   return (
     <section id="servicios" className="py-16 bg-[#1a5276]">
       {/* Decorative top bar */}
@@ -44,10 +47,10 @@ export function Services() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            NUESTROS SERVICIOS DE TRANSPORTE
+            {t("services.title")}
           </h2>
           <p className="text-white/80 text-sm md:text-base">
-            OPCIONES SEGURAS Y COMODAS PARA CLIENTES NACIONALES Y EXTRANJEROS.
+            {t("services.subtitle")}
           </p>
         </div>
 
@@ -67,17 +70,17 @@ export function Services() {
                   />
                 </div>
                 <h3 className="text-[#1a5276] font-bold text-sm mb-2">
-                  {service.title}
+                  {t(service.titleKey)}
                 </h3>
                 <p className="text-gray-600 text-xs px-2 flex-grow">
-                  {service.description}
+                  {t(service.descriptionKey)}
                 </p>
               </CardContent>
               <CardFooter className="pb-6 pt-2 justify-center mt-auto">
                 <Link href={`/trips?service=${service.serviceId}`}>
                   <Button className="bg-amber-500 hover:bg-[#1a5276] text-white text-xs px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-300">
                     <Car className="w-4 h-4" />
-                    RESERVAR AHORA
+                    {t("hero.bookNow")}
                   </Button>
                 </Link>
               </CardFooter>

@@ -6,6 +6,7 @@ import { MapPin, Navigation, Search, Loader2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useLanguage } from "@/contexts/language-context"
 
 // Dynamically import react-leaflet components with SSR disabled
 const MapContainer = dynamic(
@@ -62,6 +63,7 @@ function RecenterMapComponent({ center }: { center: [number, number] }) {
 }
 
 export function LocationPicker({ type, value, onChange, label, placeholder }: LocationPickerProps) {
+  const { language, t } = useLanguage()
   const [isMapOpen, setIsMapOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<Array<{ display_name: string; lat: string; lon: string }>>([])
@@ -117,7 +119,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
         {
           headers: {
-            "Accept-Language": "es"
+            "Accept-Language": language
           }
         }
       )
@@ -126,7 +128,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
     } catch (error) {
       return `${lat.toFixed(6)}, ${lng.toFixed(6)}`
     }
-  }, [])
+  }, [language])
 
   // Search for places using Nominatim
   const searchPlaces = useCallback(async (query: string) => {
@@ -141,7 +143,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=ni&limit=5`,
         {
           headers: {
-            "Accept-Language": "es"
+            "Accept-Language": language
           }
         }
       )
@@ -152,7 +154,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
     } finally {
       setIsSearching(false)
     }
-  }, [])
+  }, [language])
 
   // Debounced search
   useEffect(() => {
@@ -178,7 +180,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
   // Get current location
   const getCurrentLocation = useCallback(() => {
     if (typeof window === "undefined" || !navigator.geolocation) {
-      alert("Tu navegador no soporta geolocalizacion")
+      alert(t("booking.noGeolocation"))
       return
     }
 
@@ -195,7 +197,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
         setIsGeolocating(false)
       },
       () => {
-        alert("No se pudo obtener tu ubicacion. Por favor selecciona manualmente en el mapa.")
+        alert(t("booking.locationError"))
         setIsGeolocating(false)
       },
       {
@@ -204,7 +206,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
         maximumAge: 0
       }
     )
-  }, [onChange, reverseGeocode])
+  }, [onChange, reverseGeocode, t])
 
   // Handle map click
   const handleMapClick = useCallback(async (lat: number, lng: number) => {
@@ -243,7 +245,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
           {value ? (
             <span className="truncate">{value.address}</span>
           ) : (
-            <span className="text-muted-foreground">{placeholder || "Seleccionar en el mapa..."}</span>
+            <span className="text-muted-foreground">{placeholder || t("booking.selectOnMap")}</span>
           )}
         </div>
         <Button
@@ -253,7 +255,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
           onClick={() => setIsMapOpen(true)}
         >
           <MapPin className="w-4 h-4 mr-1" />
-          Mapa
+          {t("booking.map")}
         </Button>
       </div>
 
@@ -265,7 +267,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
             <div className={`${type === "origin" ? "bg-green-600" : "bg-red-600"} text-white px-4 py-3 flex items-center justify-between`}>
               <h3 className="font-semibold flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
-                {type === "origin" ? "Seleccionar Punto de Origen" : "Seleccionar Destino"}
+                {type === "origin" ? t("booking.selectOrigin") : t("booking.selectDestination")}
               </h3>
               <button 
                 onClick={() => setIsMapOpen(false)}
@@ -282,7 +284,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type="text"
-                  placeholder="Buscar direccion..."
+                  placeholder={t("booking.searchAddress")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -323,7 +325,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
                 ) : (
                   <Navigation className="w-4 h-4 mr-2" />
                 )}
-                {isGeolocating ? "Obteniendo ubicacion..." : "Usar mi ubicacion actual"}
+                {isGeolocating ? t("booking.gettingLocation") : t("booking.useCurrentLocation")}
               </Button>
             </div>
 
@@ -356,7 +358,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
               <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg z-[500]">
                 <p className="text-sm text-gray-600 text-center">
                   <MapPin className={`w-4 h-4 inline mr-1 ${iconColor}`} />
-                  Haz clic en el mapa para seleccionar la ubicacion
+                  {t("booking.mapInstructions")}
                 </p>
               </div>
             </div>
@@ -367,7 +369,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
                 <div className="flex items-start gap-2">
                   <MapPin className={`w-5 h-5 ${iconColor} flex-shrink-0 mt-0.5`} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">Ubicacion seleccionada:</p>
+                    <p className="text-sm font-medium text-gray-900">{t("booking.selectedLocation")}</p>
                     <p className="text-sm text-gray-600 truncate">{selectedAddress}</p>
                   </div>
                 </div>
@@ -381,7 +383,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
                 variant="outline"
                 onClick={() => setIsMapOpen(false)}
               >
-                Cancelar
+                {t("booking.cancel")}
               </Button>
               <Button
                 type="button"
@@ -389,7 +391,7 @@ export function LocationPicker({ type, value, onChange, label, placeholder }: Lo
                 onClick={() => setIsMapOpen(false)}
                 disabled={!selectedPosition}
               >
-                Confirmar ubicacion
+                {t("booking.confirmLocation")}
               </Button>
             </div>
           </div>

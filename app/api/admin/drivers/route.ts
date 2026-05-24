@@ -12,6 +12,14 @@ function generatePassword(length = 12): string {
   return password
 }
 
+function isValidNicaraguaPhone(value: string) {
+  return /^\+505\d{8}$/.test(value)
+}
+
+function isValidCedula(value: string) {
+  return /^\d{3}-\d{6}-\d{4}[A-Z]$/.test(value)
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Verify the requesting user is an admin
@@ -38,18 +46,41 @@ export async function POST(request: NextRequest) {
     const { 
       email, 
       full_name, 
+      first_name,
+      last_name,
       phone,
+      cedula_number,
+      address,
       password: customPassword,
       license_number,
       vehicle_brand,
       vehicle_model,
       vehicle_year,
       vehicle_plate,
-      vehicle_color
+      vehicle_color,
+      avatar_url,
+      vehicle_photo_url
     } = body
 
-    if (!email || !full_name) {
-      return NextResponse.json({ error: 'Email y nombre completo son requeridos' }, { status: 400 })
+    const resolvedFullName = full_name || [first_name, last_name].filter(Boolean).join(' ').trim()
+    const resolvedLicenseNumber = license_number || cedula_number
+
+    if (!email || !resolvedFullName || !phone || !resolvedLicenseNumber || !address || !vehicle_model || !vehicle_plate || !vehicle_color) {
+      return NextResponse.json({
+        error: 'Correo, nombre, telefono, cedula/licencia, direccion, modelo, color y placa son requeridos'
+      }, { status: 400 })
+    }
+
+    if (!isValidNicaraguaPhone(phone)) {
+      return NextResponse.json({
+        error: 'El telefono debe iniciar con +505 y tener 8 numeros despues'
+      }, { status: 400 })
+    }
+
+    if (!isValidCedula(resolvedLicenseNumber)) {
+      return NextResponse.json({
+        error: 'La cedula debe tener el formato 111-111111-1111A'
+      }, { status: 400 })
     }
 
     // Generate password if not provided
@@ -64,7 +95,13 @@ export async function POST(request: NextRequest) {
       password,
       email_confirm: true, // Auto-confirm email for admin-created users
       user_metadata: {
-        full_name,
+        full_name: resolvedFullName,
+        first_name,
+        last_name,
+        phone,
+        cedula_number: resolvedLicenseNumber,
+        address,
+        avatar_url,
         role: 'driver'
       }
     })
@@ -80,33 +117,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Error al crear usuario' }, { status: 500 })
     }
 
-    // The trigger should create the profile, but let's also update the drivers table
-    // with the additional vehicle information
+    await adminClient
+      .from('profiles')
+      .upsert({
+        id: authData.user.id,
+        email,
+        full_name: resolvedFullName,
+        first_name: first_name || resolvedFullName.split(' ')[0] || null,
+        last_name: last_name || resolvedFullName.split(' ').slice(1).join(' ') || null,
+        phone,
+        cedula_number: resolvedLicenseNumber,
+        address,
+        location: address,
+        avatar_url: avatar_url || null,
+        role: 'driver'
+      })
+
     const { error: driverError } = await adminClient
       .from('drivers')
       .upsert({
         id: authData.user.id,
-        license_number,
-        vehicle_brand,
+        user_id: authData.user.id,
+        license_number: resolvedLicenseNumber,
+        vehicle_brand: vehicle_brand || null,
         vehicle_model,
         vehicle_year: vehicle_year ? parseInt(vehicle_year) : null,
         vehicle_plate,
         vehicle_color,
         status: 'offline',
-        is_active: true
+        is_active: true,
+        is_verified: true
       })
 
     if (driverError) {
       console.error('Error updating driver info:', driverError)
       // Don't fail the request, the user was created successfully
-    }
-
-    // Update profile with phone if provided
-    if (phone) {
-      await adminClient
-        .from('profiles')
-        .update({ phone })
-        .eq('id', authData.user.id)
     }
 
     return NextResponse.json({
@@ -115,7 +160,7 @@ export async function POST(request: NextRequest) {
       driver: {
         id: authData.user.id,
         email: authData.user.email,
-        full_name,
+        full_name: resolvedFullName,
         password // Return password so admin can share with driver
       }
     })
@@ -149,37 +194,86 @@ export async function GET() {
       return NextResponse.json({ error: 'Acceso denegado' }, { status: 403 })
     }
 
-    // Get all drivers with their profiles
+    // Get all drivers and profiles separately to avoid PostgREST relationship ambiguity.
     const adminClient = createAdminClient()
-    const { data: drivers, error } = await adminClient
+    const { data: driverRows, error: driversError } = await adminClient
+      .from('drivers')
+      .select(`
+        id,
+        license_number,
+        vehicle_brand,
+        vehicle_model,
+        vehicle_year,
+        vehicle_plate,
+        vehicle_color,
+        status,
+        rating,
+        total_trips,
+        is_active,
+        created_at
+      `)
+      .order('created_at', { ascending: false })
+
+    if (driversError) {
+      console.error('Error fetching drivers:', driversError)
+      return NextResponse.json({ error: driversError.message || 'Error al obtener conductores' }, { status: 500 })
+    }
+
+    const driverIds = (driverRows || []).map((driver) => driver.id)
+    let { data: profileRows, error: profilesError } = await adminClient
       .from('profiles')
       .select(`
         id,
         email,
         full_name,
         phone,
+        cedula_number,
+        address,
+        avatar_url,
         role,
-        created_at,
-        drivers (
-          license_number,
-          vehicle_brand,
-          vehicle_model,
-          vehicle_year,
-          vehicle_plate,
-          vehicle_color,
-          status,
-          rating,
-          total_trips,
-          is_active
-        )
+        created_at
       `)
-      .eq('role', 'driver')
-      .order('created_at', { ascending: false })
+      .in('id', driverIds)
 
-    if (error) {
-      console.error('Error fetching drivers:', error)
-      return NextResponse.json({ error: 'Error al obtener conductores' }, { status: 500 })
+    if (profilesError?.message?.includes('does not exist')) {
+      const fallback = await adminClient
+        .from('profiles')
+        .select(`
+          id,
+          email,
+          full_name,
+          phone,
+          avatar_url,
+          role,
+          created_at
+        `)
+        .in('id', driverIds)
+      profileRows = fallback.data
+      profilesError = fallback.error
     }
+
+    if (profilesError) {
+      console.error('Error fetching driver profiles:', profilesError)
+      return NextResponse.json({ error: profilesError.message || 'Error al obtener conductores' }, { status: 500 })
+    }
+
+    const profileMap = new Map((profileRows || []).map((profile) => [profile.id, profile]))
+    const drivers = (driverRows || []).map((driver) => ({
+      ...(profileMap.get(driver.id) || {
+        id: driver.id,
+        email: '',
+        full_name: 'Sin perfil',
+        first_name: null,
+        last_name: null,
+        phone: null,
+        cedula_number: null,
+        address: null,
+        avatar_url: null,
+        role: 'driver',
+        created_at: driver.created_at,
+      }),
+      drivers: driver
+    }))
 
     return NextResponse.json({ drivers })
 
