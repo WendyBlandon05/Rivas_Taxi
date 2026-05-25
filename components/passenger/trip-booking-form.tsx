@@ -30,10 +30,9 @@ interface Destination {
 }
 
 const SERVICE_TYPES = [
+  { id: "urbano", nameKey: "booking.service.urbano.name", descriptionKey: "booking.service.urbano.description" },
   { id: "turistico", nameKey: "booking.service.turistico.name", descriptionKey: "booking.service.turistico.description" },
-  { id: "interdepartamental", nameKey: "booking.service.interdepartamental.name", descriptionKey: "booking.service.interdepartamental.description" },
-  { id: "local", nameKey: "booking.service.local.name", descriptionKey: "booking.service.local.description" },
-  { id: "programada", nameKey: "booking.service.programada.name", descriptionKey: "booking.service.programada.description" }
+  { id: "empresarial", nameKey: "booking.service.empresarial.name", descriptionKey: "booking.service.empresarial.description" }
 ]
 
 const PRICE_PER_KM = 1.5 // USD per km
@@ -335,7 +334,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
             {/* Service Type Selection */}
             <div className="space-y-4">
               <h3 className="font-semibold text-[#1a5276] border-b pb-2">{t("booking.serviceType")}</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {SERVICE_TYPES.map((service) => (
                   <button
                     key={service.id}

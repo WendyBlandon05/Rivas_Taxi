@@ -9,9 +9,9 @@ import { useLanguage } from "@/contexts/language-context"
 const services = [
   {
     id: 1,
-    serviceId: "interdepartamental",
-    titleKey: "services.interdepartamental.title",
-    descriptionKey: "services.interdepartamental.description"
+    serviceId: "urbano",
+    titleKey: "services.urbano.title",
+    descriptionKey: "services.urbano.description"
   },
   {
     id: 2,
@@ -21,15 +21,9 @@ const services = [
   },
   {
     id: 3,
-    serviceId: "local",
-    titleKey: "services.local.title",
-    descriptionKey: "services.local.description"
-  },
-  {
-    id: 4,
-    serviceId: "programada",
-    titleKey: "services.programada.title",
-    descriptionKey: "services.programada.description"
+    serviceId: "empresarial",
+    titleKey: "services.empresarial.title",
+    descriptionKey: "services.empresarial.description"
   }
 ]
 
@@ -54,7 +48,7 @@ export function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {services.map((service) => (
             <Card 
               key={service.id} 

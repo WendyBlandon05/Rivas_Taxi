@@ -101,11 +101,9 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4 text-amber-400">{t("footer.ourServices")}</h3>
             <ul className="space-y-2">
-              <li className="text-gray-400 text-sm">{t("services.interdepartamental.title")}</li>
+              <li className="text-gray-400 text-sm">{t("services.urbano.title")}</li>
               <li className="text-gray-400 text-sm">{t("services.turistico.title")}</li>
-              <li className="text-gray-400 text-sm">{t("services.local.title")}</li>
-              <li className="text-gray-400 text-sm">{t("services.programada.title")}</li>
-              <li className="text-gray-400 text-sm">{t("footer.privateTours")}</li>
+              <li className="text-gray-400 text-sm">{t("services.empresarial.title")}</li>
             </ul>
           </div>
 
