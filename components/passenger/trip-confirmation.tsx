@@ -70,13 +70,14 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
         })
         
         if (!response.ok) {
-          throw new Error("Error al cancelar el viaje")
+          const data = await response.json().catch(() => null)
+          throw new Error(data?.error || "Error al cancelar el viaje")
         }
       }
       
       setIsCancelled(true)
     } catch (error) {
-      alert("Error al cancelar el viaje. Por favor intenta de nuevo.")
+      alert(error instanceof Error ? error.message : "Error al cancelar el viaje. Por favor intenta de nuevo.")
     } finally {
       setIsCancelling(false)
       setShowCancelDialog(false)

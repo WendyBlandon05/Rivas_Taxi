@@ -277,24 +277,110 @@ export async function PATCH(
       })
     }
 
-    // Get the trip first to get driver info
-    const { data: existingTrip } = await supabase
+    const { data: requesterProfile } = await adminClient
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    const isAdmin = requesterProfile?.role === "admin"
+
+    // Get the trip first to validate ownership and driver info
+    const { data: existingTrip, error: existingTripError } = await adminClient
       .from("trips")
-      .select("driver_id, status")
+      .select("*")
       .eq("id", id)
       .single()
 
-    // If cancelling, add cancellation details
-    if (updates.status === "cancelled") {
-      updates.cancelled_at = new Date().toISOString()
+    if (existingTripError || !existingTrip) {
+      return NextResponse.json({ error: "Viaje no encontrado" }, { status: 404 })
     }
 
-    const { data, error } = await supabase
-      .from("trips")
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString()
+    // If cancelling, add cancellation details
+    if (updates.status === "cancelled") {
+      if (!isAdmin && existingTrip.passenger_id !== user.id) {
+        return NextResponse.json({ error: "Solo puedes cancelar tus propias reservaciones" }, { status: 403 })
+      }
+
+      if (!["pending", "confirmed"].includes(existingTrip.status) && !isAdmin) {
+        return NextResponse.json({ error: "Este viaje ya no se puede cancelar desde la web" }, { status: 400 })
+      }
+
+      const now = new Date().toISOString()
+      const { data, error } = await adminClient
+        .from("trips")
+        .update({
+          status: "cancelled",
+          cancellation_reason: String(updates.cancellation_reason || "Cancelado por el pasajero"),
+          cancelled_by: user.id,
+          cancelled_at: now,
+          updated_at: now
+        })
+        .eq("id", id)
+        .select(`
+          *,
+          driver:drivers!driver_id(
+            id,
+            vehicle_brand,
+            vehicle_model,
+            vehicle_year,
+            vehicle_plate,
+            vehicle_color,
+            rating,
+            total_trips,
+            profile:profiles(
+              id,
+              full_name,
+              phone,
+              avatar_url
+            )
+          )
+        `)
+        .single()
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 400 })
+      }
+
+      if (existingTrip.driver_id) {
+        await adminClient
+          .from("drivers")
+          .update({ status: "available", updated_at: now })
+          .eq("id", existingTrip.driver_id)
+      }
+
+      return NextResponse.json({
+        message: "Viaje cancelado exitosamente",
+        trip: data
       })
+    }
+
+    if (updates.status === "in_progress" || updates.status === "completed") {
+      let isAssignedDriver = existingTrip.driver_id === user.id
+
+      if (!isAssignedDriver && existingTrip.driver_id) {
+        const { data: driver } = await adminClient
+          .from("drivers")
+          .select("user_id")
+          .eq("id", existingTrip.driver_id)
+          .single()
+
+        isAssignedDriver = driver?.user_id === user.id
+      }
+
+      if (!isAdmin && !isAssignedDriver) {
+        return NextResponse.json({ error: "Solo el conductor asignado puede actualizar este viaje" }, { status: 403 })
+      }
+    }
+
+    const allowedUpdates = {
+      status: updates.status,
+      updated_at: new Date().toISOString()
+    }
+
+    const { data, error } = await adminClient
+      .from("trips")
+      .update(allowedUpdates)
       .eq("id", id)
       .select(`
         *,
@@ -322,7 +408,7 @@ export async function PATCH(
     }
 
     if (updates.status === "in_progress" && existingTrip?.driver_id) {
-      await supabase
+      await adminClient
         .from("drivers")
         .update({ status: "busy", updated_at: new Date().toISOString() })
         .eq("id", existingTrip.driver_id)
@@ -330,17 +416,23 @@ export async function PATCH(
 
     // If trip was cancelled or completed, free up the driver
     if ((updates.status === "cancelled" || updates.status === "completed") && existingTrip?.driver_id) {
-      await supabase
+      await adminClient
         .from("drivers")
         .update({ status: "available", updated_at: new Date().toISOString() })
         .eq("id", existingTrip.driver_id)
 
       // Increment completed trips if completed
       if (updates.status === "completed") {
-        await supabase
+        const { data: driverStats } = await adminClient
+          .from("drivers")
+          .select("total_trips")
+          .eq("id", existingTrip.driver_id)
+          .single()
+
+        await adminClient
           .from("drivers")
           .update({ 
-            total_trips: (await supabase.from("drivers").select("total_trips").eq("id", existingTrip.driver_id).single()).data?.total_trips + 1 || 1
+            total_trips: (driverStats?.total_trips || 0) + 1
           })
           .eq("id", existingTrip.driver_id)
       }
