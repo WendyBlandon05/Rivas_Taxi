@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { X, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/auth-context"
 import {
   Dialog,
   DialogContent,
@@ -12,22 +14,26 @@ import {
 } from "@/components/ui/dialog"
 
 export function PromotionsPopup() {
+  const router = useRouter()
+  const { user, isLoading } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    // Check if the popup has been shown in this session
-    const hasSeenPromo = sessionStorage.getItem("hasSeenPromo")
-    
-    if (!hasSeenPromo) {
-      // Show popup after 3 seconds
-      const timer = setTimeout(() => {
-        setIsOpen(true)
-        sessionStorage.setItem("hasSeenPromo", "true")
-      }, 3000)
+    if (isLoading) return
 
-      return () => clearTimeout(timer)
-    }
-  }, [])
+    const today = new Date().toISOString().slice(0, 10)
+    const storageKey = user ? `pctPromoSeen:${user.id}:${today}` : `pctGuestPromoSeen:${today}`
+    const hasSeenPromo = localStorage.getItem(storageKey)
+
+    if (hasSeenPromo) return
+
+    const timer = setTimeout(() => {
+      setIsOpen(true)
+      localStorage.setItem(storageKey, "true")
+    }, 1800)
+
+    return () => clearTimeout(timer)
+  }, [isLoading, user])
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -78,7 +84,10 @@ export function PromotionsPopup() {
             <div className="flex flex-col gap-2">
               <Button 
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false)
+                  router.push("/trips?coupon=BIENVENIDO20")
+                }}
               >
                 RESERVAR AHORA
               </Button>

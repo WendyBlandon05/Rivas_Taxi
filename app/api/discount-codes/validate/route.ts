@@ -1,20 +1,53 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
+
+const FIRST_TRIP_COUPONS = new Set(["BIENVENIDO20"])
 
 // Validate a discount code
 export async function POST(request: Request) {
   try {
     const supabase = await createClient()
+    const adminClient = createAdminClient()
     const { code } = await request.json()
+    const normalizedCode = String(code || "").trim().toUpperCase()
 
-    if (!code) {
+    if (!normalizedCode) {
       return NextResponse.json({ error: "Codigo requerido" }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (FIRST_TRIP_COUPONS.has(normalizedCode)) {
+      if (!user) {
+        return NextResponse.json({
+          valid: false,
+          error: "Inicia sesion o registrate para usar este cupon de primer viaje",
+        }, { status: 401 })
+      }
+
+      const { count, error: tripsError } = await adminClient
+        .from("trips")
+        .select("id", { count: "exact", head: true })
+        .eq("passenger_id", user.id)
+
+      if (tripsError) {
+        console.error("Error checking first-trip coupon:", tripsError)
+        return NextResponse.json({ error: "Error al validar el historial de viajes" }, { status: 500 })
+      }
+
+      if ((count || 0) > 0) {
+        return NextResponse.json({
+          valid: false,
+          error: "Este cupon solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.",
+        }, { status: 400 })
+      }
+    }
+
+    const { data, error } = await adminClient
       .from("discount_codes")
       .select("*")
-      .eq("code", code.toUpperCase())
+      .eq("code", normalizedCode)
       .eq("is_active", true)
       .single()
 

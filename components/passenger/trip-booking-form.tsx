@@ -142,6 +142,11 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
     } else {
       setServiceType("turistico")
     }
+
+    const couponParam = searchParams.get("coupon")
+    if (couponParam) {
+      setCouponCode(couponParam.toUpperCase())
+    }
   }, [searchParams])
 
   // Calculate distance and price based on selected locations
@@ -531,7 +536,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                 <p className="text-red-500 text-sm">{couponError}</p>
               )}
               <p className="text-xs text-gray-500">
-                {t("booking.availableCoupons")} BIENVENIDO10, PACIFIC15, VERANO20, TURISTA10, AEROPUERTO15
+                {t("booking.availableCoupons")} BIENVENIDO20, PACIFIC15, VERANO20, TURISTA10, AEROPUERTO15
               </p>
             </div>
 

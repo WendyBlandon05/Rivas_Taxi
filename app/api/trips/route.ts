@@ -14,6 +14,7 @@ function generateConfirmationCode(): string {
 
 const AVERAGE_SPEED_KMH = 45
 const TURNAROUND_MINUTES = 20
+const FIRST_TRIP_COUPONS = new Set(['BIENVENIDO20'])
 
 function estimateTripDurationMinutes(distanceKm: number): number {
   if (!Number.isFinite(distanceKm) || distanceKm <= 0) {
@@ -264,38 +265,84 @@ export async function POST(request: Request) {
     const resolvedPassengerPhone = passengerProfile?.phone || passengerPhone
 
     // Validate and apply discount code if provided
-    let discountAmount = Number(providedDiscountAmount || 0)
+    let discountAmount = 0
     let validatedDiscountCode = null
+    let validatedCouponId: string | null = null
+    let validatedCouponCurrentUses = 0
     const estimatedPrice = Number(priceUsd || 0)
 
-    if (discountCode && !providedDiscountAmount) {
+    if (discountCode) {
+      const normalizedDiscountCode = String(discountCode).trim().toUpperCase()
+
+      if (FIRST_TRIP_COUPONS.has(normalizedDiscountCode)) {
+        const { count: previousTrips, error: previousTripsError } = await adminClient
+          .from('trips')
+          .select('id', { count: 'exact', head: true })
+          .eq('passenger_id', passengerId)
+
+        if (previousTripsError) {
+          console.error('[v0] Error checking first-trip coupon:', previousTripsError)
+          return NextResponse.json(
+            { error: 'No pudimos validar si este es tu primer viaje. Intenta de nuevo.' },
+            { status: 500 }
+          )
+        }
+
+        if ((previousTrips || 0) > 0) {
+          return NextResponse.json(
+            { error: 'El cupon BIENVENIDO20 solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.' },
+            { status: 400 }
+          )
+        }
+      }
+
       const { data: coupon, error: couponError } = await adminClient
         .from('discount_codes')
         .select('*')
-        .eq('code', discountCode.toUpperCase())
+        .eq('code', normalizedDiscountCode)
         .eq('is_active', true)
-        .lte('valid_from', new Date().toISOString())
-        .gte('valid_until', new Date().toISOString())
         .single()
 
-      if (!couponError && coupon) {
-        // Check max uses
-        if (!coupon.max_uses || coupon.current_uses < coupon.max_uses) {
-          // Check minimum trip amount
-          if (!coupon.min_trip_amount || estimatedPrice >= coupon.min_trip_amount) {
-            discountAmount = (estimatedPrice * coupon.discount_percentage) / 100
-            validatedDiscountCode = coupon.code
-
-            // Increment usage count
-            await adminClient
-              .from('discount_codes')
-              .update({ current_uses: coupon.current_uses + 1 })
-              .eq('id', coupon.id)
-          }
-        }
+      if (couponError || !coupon) {
+        return NextResponse.json(
+          { error: 'Codigo de descuento invalido o expirado' },
+          { status: 400 }
+        )
       }
-    } else if (discountCode) {
-      validatedDiscountCode = discountCode
+
+      const now = new Date()
+      if (coupon.valid_from && new Date(coupon.valid_from) > now) {
+        return NextResponse.json(
+          { error: 'Este codigo aun no esta activo' },
+          { status: 400 }
+        )
+      }
+
+      if (coupon.valid_until && new Date(coupon.valid_until) < now) {
+        return NextResponse.json(
+          { error: 'Este codigo ha expirado' },
+          { status: 400 }
+        )
+      }
+
+      if (coupon.max_uses && coupon.current_uses >= coupon.max_uses) {
+        return NextResponse.json(
+          { error: 'Este codigo ya alcanzo el limite de usos' },
+          { status: 400 }
+        )
+      }
+
+      if (coupon.min_trip_amount && estimatedPrice < coupon.min_trip_amount) {
+        return NextResponse.json(
+          { error: `Este cupon aplica desde $${Number(coupon.min_trip_amount).toFixed(2)} USD` },
+          { status: 400 }
+        )
+      }
+
+      discountAmount = Math.round(((estimatedPrice * coupon.discount_percentage) / 100) * 100) / 100
+      validatedDiscountCode = coupon.code
+      validatedCouponId = coupon.id
+      validatedCouponCurrentUses = Number(coupon.current_uses || 0)
     }
 
     // Generate confirmation code
@@ -413,6 +460,13 @@ export async function POST(request: Request) {
         .single()
 
       if (!fallbackError) {
+        if (validatedCouponId) {
+          await adminClient
+            .from('discount_codes')
+            .update({ current_uses: validatedCouponCurrentUses + 1 })
+            .eq('id', validatedCouponId)
+        }
+
         return NextResponse.json({
           message: assignedDriverId
             ? 'Reservacion confirmada! Un conductor ha sido asignado.'
@@ -430,6 +484,13 @@ export async function POST(request: Request) {
         { error: 'Error al crear la reservacion: ' + tripError.message },
         { status: 500 }
       )
+    }
+
+    if (validatedCouponId) {
+      await adminClient
+        .from('discount_codes')
+        .update({ current_uses: validatedCouponCurrentUses + 1 })
+        .eq('id', validatedCouponId)
     }
 
     return NextResponse.json({

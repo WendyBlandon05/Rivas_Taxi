@@ -221,8 +221,8 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
   if (["cupon", "descuento", "promo", "coupon", "discount"].some((word) => lowerMessage.includes(word))) {
     return {
       text: isEnglish
-        ? "Available coupons to try in the form:\n\n- BIENVENIDO10\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nThe discount is calculated before confirming the booking."
-        : "Cupones disponibles para probar en el formulario:\n\n- BIENVENIDO10\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nEl descuento se calcula antes de confirmar la reserva.",
+        ? "Available coupons to try in the form:\n\n- BIENVENIDO20: first ride only\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nThe discount is calculated before confirming the booking."
+        : "Cupones disponibles para probar en el formulario:\n\n- BIENVENIDO20: solo primer viaje\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nEl descuento se calcula antes de confirmar la reserva.",
       actions: [{ label: isEnglish ? "Book with coupon" : "Reservar con cupon", href: "/trips", icon: "coupon" }],
     }
   }

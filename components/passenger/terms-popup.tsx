@@ -16,10 +16,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 export function TermsPopup() {
   const [isOpen, setIsOpen] = useState(false)
   const [accepted, setAccepted] = useState(false)
+  const storageKey = "pctAcceptedTerms:v2"
 
   useEffect(() => {
-    // Check if terms have been accepted
-    const hasAcceptedTerms = localStorage.getItem("hasAcceptedTerms")
+    const hasAcceptedTerms = localStorage.getItem(storageKey)
     
     if (!hasAcceptedTerms) {
       // Show popup after promotions popup (5 seconds delay)
@@ -33,7 +33,7 @@ export function TermsPopup() {
 
   const handleAccept = () => {
     if (accepted) {
-      localStorage.setItem("hasAcceptedTerms", "true")
+      localStorage.setItem(storageKey, "true")
       setIsOpen(false)
     }
   }
