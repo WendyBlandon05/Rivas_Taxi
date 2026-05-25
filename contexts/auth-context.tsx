@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, metadata?: Record<string, unknown>) => {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -95,6 +95,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: metadata
       }
     })
+
+    if (!error && data.user && metadata) {
+      await supabase
+        .from("profiles")
+        .upsert({
+          id: data.user.id,
+          email,
+          full_name: typeof metadata.full_name === "string" ? metadata.full_name : null,
+          first_name: typeof metadata.first_name === "string" ? metadata.first_name : null,
+          last_name: typeof metadata.last_name === "string" ? metadata.last_name : null,
+          phone: typeof metadata.phone === "string" ? metadata.phone : null,
+          location: typeof metadata.location === "string" ? metadata.location : null,
+          role: "passenger",
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "id" })
+    }
+
     return { error }
   }
 
