@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Facebook, Instagram, MapPin, Phone, Mail, Clock, Car } from "lucide-react"
+import { Facebook, MapPin, Phone, Mail, Clock, Car } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 // TikTok icon component since it's not in Lucide
@@ -39,24 +39,18 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-4">
               <Link 
-                href="https://facebook.com/pacificcoasttaxi" 
+                href="https://www.facebook.com/share/1ELPyg2ra8/" 
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-[#1a5276] rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link 
-                href="https://instagram.com/pacificcoasttaxi" 
+                href="https://www.tiktok.com/@pacific.coast.tax?_r=1&_t=ZS-96dNPChLfTV" 
                 target="_blank"
-                className="w-10 h-10 bg-[#1a5276] rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </Link>
-              <Link 
-                href="https://tiktok.com/@pacificcoasttaxi" 
-                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-[#1a5276] rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors"
                 aria-label="TikTok"
               >
