@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { 
   MapPin, 
   Calendar, 
@@ -18,7 +22,8 @@ import {
   CheckCircle,
   XCircle,
   MessageSquare,
-  RefreshCw
+  RefreshCw,
+  AlertTriangle
 } from "lucide-react"
 import { DriverReviewModal } from "./driver-review-modal"
 
@@ -91,11 +96,23 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
   }
 }
 
+const CANCELLATION_REASONS = [
+  { id: "plans_changed", label: "Mis planes cambiaron" },
+  { id: "found_alternative", label: "Encontre otra alternativa de transporte" },
+  { id: "wrong_details", label: "Ingrese datos incorrectos" },
+  { id: "price_too_high", label: "El precio es muy alto" },
+  { id: "emergency", label: "Tengo una emergencia" },
+  { id: "other", label: "Otro motivo" }
+]
+
 export function MyTrips({ onNewTrip }: MyTripsProps) {
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [cancelTrip, setCancelTrip] = useState<Trip | null>(null)
+  const [cancelReason, setCancelReason] = useState("")
+  const [cancelNotes, setCancelNotes] = useState("")
   const [reviewModalOpen, setReviewModalOpen] = useState(false)
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
 
@@ -143,6 +160,47 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
       }
     } catch (err) {
       alert("Error al cancelar el viaje")
+    } finally {
+      setCancellingId(null)
+    }
+  }
+
+  const handleCancelTripWithReason = async () => {
+    if (!cancelTrip || !cancelReason) return
+
+    const reason = cancelReason === "other"
+      ? cancelNotes.trim()
+      : CANCELLATION_REASONS.find((item) => item.id === cancelReason)?.label || "Cancelado por el pasajero"
+
+    if (cancelReason === "other" && reason.length < 8) {
+      setError("Describe el motivo de cancelacion con un poco mas de detalle.")
+      return
+    }
+
+    setCancellingId(cancelTrip.id)
+    setError("")
+
+    try {
+      const response = await fetch(`/api/trips/${cancelTrip.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "cancelled",
+          cancellation_reason: reason
+        })
+      })
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Error al cancelar el viaje")
+      }
+
+      setCancelTrip(null)
+      setCancelReason("")
+      setCancelNotes("")
+      fetchTrips()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error de conexion al cancelar el viaje")
     } finally {
       setCancellingId(null)
     }
@@ -327,7 +385,12 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCancelTrip(trip.id)}
+                      onClick={() => {
+                        setCancelTrip(trip)
+                        setCancelReason("")
+                        setCancelNotes("")
+                        setError("")
+                      }}
                       disabled={cancellingId === trip.id}
                       className="text-red-600 border-red-300 hover:bg-red-50"
                     >
@@ -363,6 +426,72 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
           )
         })}
       </div>
+
+      <Dialog open={!!cancelTrip} onOpenChange={(open) => {
+        if (!open && !cancellingId) {
+          setCancelTrip(null)
+          setCancelReason("")
+          setCancelNotes("")
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="w-5 h-5" />
+              Cancelar reservacion
+            </DialogTitle>
+            <DialogDescription>
+              Selecciona el motivo de la cancelacion. Esto nos ayuda a analizar y mejorar el servicio.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <RadioGroup value={cancelReason} onValueChange={setCancelReason}>
+              {CANCELLATION_REASONS.map((reason) => (
+                <div key={reason.id} className="flex items-center space-x-2">
+                  <RadioGroupItem value={reason.id} id={`trip-tab-${reason.id}`} />
+                  <Label htmlFor={`trip-tab-${reason.id}`} className="cursor-pointer">
+                    {reason.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+
+            {cancelReason === "other" && (
+              <Textarea
+                placeholder="Por favor, describe el motivo..."
+                value={cancelNotes}
+                onChange={(event) => setCancelNotes(event.target.value)}
+              />
+            )}
+          </div>
+
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+            <strong>Nota:</strong> El motivo quedara guardado para revisar por que se cancelan los viajes.
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCancelTrip(null)
+                setCancelReason("")
+                setCancelNotes("")
+              }}
+              disabled={!!cancellingId}
+            >
+              Volver
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancelTripWithReason}
+              disabled={!cancelReason || !!cancellingId}
+            >
+              {cancellingId ? "Cancelando..." : "Confirmar cancelacion"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Review Modal */}
       {selectedTrip && selectedTrip.driver && (

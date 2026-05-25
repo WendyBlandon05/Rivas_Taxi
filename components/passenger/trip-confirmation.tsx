@@ -85,22 +85,61 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
   }
 
   const handleShare = async () => {
+    const shareText = `Viaje reservado de ${tripData.origin} a ${tripData.destination}. Codigo: ${confirmationCode}`
     const shareData = {
       title: "Mi viaje con Pacific Coast Taxi",
-      text: `Viaje reservado de ${tripData.origin} a ${tripData.destination}. Codigo: ${confirmationCode}`,
+      text: shareText,
       url: window.location.href
     }
     
     if (navigator.share) {
       try {
         await navigator.share(shareData)
+        return
       } catch {
-        // User cancelled or error
+        return
       }
-    } else {
-      navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`)
-      alert("Enlace copiado al portapapeles")
     }
+
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${shareData.url}`)
+      alert("Enlace copiado al portapapeles")
+    } catch {
+      alert(`${shareText}\n${shareData.url}`)
+    }
+  }
+
+  const handleDownloadReceipt = () => {
+    const lines = [
+      "PACIFIC COAST TAXI",
+      "Comprobante de reservacion",
+      "",
+      `Codigo: ${confirmationCode}`,
+      `Estado: ${tripData.status === "confirmed" ? "Confirmado" : "Pendiente"}`,
+      `Pasajero: ${tripData.name}`,
+      `Telefono: ${tripData.phone}`,
+      `Origen: ${tripData.origin}`,
+      `Destino: ${tripData.destination}`,
+      `Fecha: ${tripData.date}`,
+      `Hora: ${tripData.time}`,
+      `Pasajeros: ${tripData.passengers}`,
+      `Distancia: ${tripData.distanceKm || 0} km`,
+      `Precio estimado: $${(tripData.estimatedPrice || 0).toFixed(2)} USD`,
+      `Precio final: $${(tripData.finalPrice || tripData.estimatedPrice || 0).toFixed(2)} USD`,
+      tripData.driver ? `Conductor: ${tripData.driver.name || "Conductor asignado"}` : "Conductor: Pendiente de asignacion",
+      "",
+      "Gracias por reservar con Pacific Coast Taxi."
+    ]
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.download = `comprobante-${confirmationCode}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   if (isCancelled) {
@@ -387,7 +426,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
           </Button>
           <Button
             variant="outline"
-            onClick={() => window.print()}
+            onClick={handleDownloadReceipt}
             className="flex items-center gap-2"
           >
             <Download className="w-4 h-4" />

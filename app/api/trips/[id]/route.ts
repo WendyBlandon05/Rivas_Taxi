@@ -339,6 +339,12 @@ export async function PATCH(
         .single()
 
       if (error) {
+        if (error.message?.includes("cancellation_reason")) {
+          return NextResponse.json({
+            error: "Falta ejecutar el script 010_add_trip_cancellation_fields.sql en Supabase para guardar motivos de cancelacion."
+          }, { status: 400 })
+        }
+
         return NextResponse.json({ error: error.message }, { status: 400 })
       }
 
