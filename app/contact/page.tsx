@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Car, ArrowLeft, MapPin, Clock, Shield, MessageCircle, Phone, Mail } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 // WhatsApp icon component
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -20,29 +21,42 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export default function ContactPage() {
+  const { language } = useLanguage()
   const whatsappNumber = "50577502626"
   const whatsappLink = `https://wa.me/${whatsappNumber}`
 
   const contactReasons = [
     {
       icon: MessageCircle,
-      title: "Consultas Generales",
-      description: "Preguntanos sobre nuestros servicios, tarifas o disponibilidad."
+      title: { es: "Consultas Generales", en: "General Questions" },
+      description: {
+        es: "Preguntanos sobre nuestros servicios, tarifas o disponibilidad.",
+        en: "Ask us about our services, rates or availability.",
+      },
     },
     {
       icon: MapPin,
-      title: "Rutas Especiales",
-      description: "Solicita cotizacion para destinos fuera de nuestra cobertura habitual."
+      title: { es: "Rutas Especiales", en: "Special Routes" },
+      description: {
+        es: "Solicita cotizacion para destinos fuera de nuestra cobertura habitual.",
+        en: "Request a quote for destinations outside our usual coverage area.",
+      },
     },
     {
       icon: Clock,
-      title: "Reservas Urgentes",
-      description: "Necesitas un viaje de ultimo momento? Estamos para ayudarte."
+      title: { es: "Reservas Urgentes", en: "Urgent Bookings" },
+      description: {
+        es: "Necesitas un viaje de ultimo momento? Estamos para ayudarte.",
+        en: "Need a last-minute ride? We are here to help.",
+      },
     },
     {
       icon: Shield,
-      title: "Reportar Incidentes",
-      description: "Si tuviste algun problema durante tu viaje, cuentanos."
+      title: { es: "Reportar Incidentes", en: "Report Incidents" },
+      description: {
+        es: "Si tuviste algun problema durante tu viaje, cuentanos.",
+        en: "If you had any issue during your ride, let us know.",
+      },
     }
   ]
 
@@ -70,10 +84,12 @@ export default function ContactPage() {
               <WhatsAppIcon className="w-14 h-14 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Contactanos por WhatsApp
+              {language === "en" ? "Contact Us on WhatsApp" : "Contactanos por WhatsApp"}
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Estamos disponibles 24/7 para atenderte. Escribenos y te responderemos lo mas pronto posible.
+              {language === "en"
+                ? "We are available 24/7 to help you. Message us and we will reply as soon as possible."
+                : "Estamos disponibles 24/7 para atenderte. Escribenos y te responderemos lo mas pronto posible."}
             </p>
           </div>
 
@@ -89,14 +105,14 @@ export default function ContactPage() {
               </Button>
             </Link>
             <p className="text-gray-400 mt-4 text-sm">
-              Haz clic para abrir WhatsApp directamente
+              {language === "en" ? "Click to open WhatsApp directly" : "Haz clic para abrir WhatsApp directamente"}
             </p>
           </div>
 
           {/* Contact Reasons */}
           <div className="mb-16">
             <h2 className="text-2xl font-bold text-white text-center mb-8">
-              Como podemos ayudarte?
+              {language === "en" ? "How can we help you?" : "Como podemos ayudarte?"}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {contactReasons.map((reason, index) => (
@@ -110,8 +126,8 @@ export default function ContactPage() {
                         <reason.icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-white font-semibold text-lg mb-1">{reason.title}</h3>
-                        <p className="text-gray-300 text-sm">{reason.description}</p>
+                        <h3 className="text-white font-semibold text-lg mb-1">{reason.title[language]}</h3>
+                        <p className="text-gray-300 text-sm">{reason.description[language]}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -124,14 +140,14 @@ export default function ContactPage() {
           <Card className="bg-white/5 border-0 backdrop-blur-sm">
             <CardContent className="p-8">
               <h3 className="text-xl font-bold text-white text-center mb-6">
-                Otras formas de contacto
+                {language === "en" ? "Other Contact Options" : "Otras formas de contacto"}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-14 h-14 bg-[#1a5276] rounded-full flex items-center justify-center mx-auto mb-3">
                     <Phone className="w-7 h-7 text-amber-400" />
                   </div>
-                  <p className="text-white font-semibold">Llamadas</p>
+                  <p className="text-white font-semibold">{language === "en" ? "Calls" : "Llamadas"}</p>
                   <p className="text-gray-400 text-sm">+505 7750-2626</p>
                 </div>
                 <div className="text-center">
@@ -145,7 +161,7 @@ export default function ContactPage() {
                   <div className="w-14 h-14 bg-[#1a5276] rounded-full flex items-center justify-center mx-auto mb-3">
                     <MapPin className="w-7 h-7 text-amber-400" />
                   </div>
-                  <p className="text-white font-semibold">Ubicacion</p>
+                  <p className="text-white font-semibold">{language === "en" ? "Location" : "Ubicacion"}</p>
                   <p className="text-gray-400 text-sm">Rivas, Nicaragua</p>
                 </div>
               </div>
@@ -159,9 +175,13 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   <Shield className="w-6 h-6 text-amber-400" />
                   <p className="text-white">
-                    <span className="font-semibold">En caso de emergencia durante un viaje,</span>
+                    <span className="font-semibold">
+                      {language === "en" ? "In case of an emergency during a ride," : "En caso de emergencia durante un viaje,"}
+                    </span>
                     <br className="md:hidden" />
-                    <span className="text-gray-300"> contactanos inmediatamente al WhatsApp.</span>
+                    <span className="text-gray-300">
+                      {language === "en" ? " contact us immediately on WhatsApp." : " contactanos inmediatamente al WhatsApp."}
+                    </span>
                   </p>
                 </div>
               </CardContent>
@@ -173,9 +193,12 @@ export default function ContactPage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-white/10">
         <div className="text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} Pacific Coast Taxi. Todos los derechos reservados.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Pacific Coast Taxi.{" "}
+            {language === "en" ? "All rights reserved." : "Todos los derechos reservados."}
+          </p>
           <Link href="/" className="text-amber-400 hover:text-amber-300 mt-2 inline-block">
-            Volver al inicio
+            {language === "en" ? "Back home" : "Volver al inicio"}
           </Link>
         </div>
       </footer>

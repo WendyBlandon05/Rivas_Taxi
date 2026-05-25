@@ -4,47 +4,61 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { ArrowRight, ChevronLeft, ChevronRight, Clock, MapPin, ShieldCheck, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/contexts/language-context"
 
 const trips = [
   {
     id: 1,
     destination: "PLAYA GIGANTE",
-    description: "Traslados comodos para grupos que buscan playa, descanso y una ruta segura.",
-    service: "Servicio turistico",
+    description: {
+      es: "Traslados comodos para grupos que buscan playa, descanso y una ruta segura.",
+      en: "Comfortable transfers for groups looking for beach time, rest and a safe route.",
+    },
+    service: { es: "Servicio turistico", en: "Tourist service" },
     duration: "55 min aprox.",
-    passengers: "Hasta 8 pasajeros",
+    passengers: { es: "Hasta 8 pasajeros", en: "Up to 8 passengers" },
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shutterstock_2302840889-1024x683-JtrAP0TDPUjgaCTbuqhOFEkwLlMsUX.jpg",
   },
   {
     id: 2,
     destination: "PLAYA MADERAS",
-    description: "Una ruta ideal para surfistas, mochileros y viajeros que quieren llegar sin complicaciones.",
-    service: "Traslado local",
+    description: {
+      es: "Una ruta ideal para surfistas, mochileros y viajeros que quieren llegar sin complicaciones.",
+      en: "An ideal route for surfers, backpackers and travelers who want an easy ride.",
+    },
+    service: { es: "Transporte urbano", en: "Urban transport" },
     duration: "40 min aprox.",
-    passengers: "Viajes privados",
+    passengers: { es: "Viajes privados", en: "Private rides" },
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/img_blog_chica_isla_saona_playa_caribe_710x300-CKwOkw7I0ABzTLmINrudmhqeMy1hzo.jpg",
   },
   {
     id: 3,
     destination: "SAN JUAN DEL SUR",
-    description: "Servicio familiar con conductores verificados y seguimiento de la reserva.",
-    service: "Destino destacado",
+    description: {
+      es: "Servicio familiar con conductores verificados y seguimiento de la reserva.",
+      en: "Family-friendly service with verified drivers and booking follow-up.",
+    },
+    service: { es: "Destino destacado", en: "Featured destination" },
     duration: "35 min aprox.",
-    passengers: "Familias y grupos",
+    passengers: { es: "Familias y grupos", en: "Families and groups" },
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/img_blog_familia_posando_playa_caribe_710x300-k47IcOmQYH84lMO2pXXB6JpCxJ3EbM.jpg",
   },
   {
     id: 4,
     destination: "GRANADA",
-    description: "Viajes interdepartamentales para conectar Rivas con uno de los destinos mas visitados.",
-    service: "Interdepartamental",
+    description: {
+      es: "Viajes para conectar Rivas con uno de los destinos mas visitados.",
+      en: "Rides connecting Rivas with one of Nicaragua's most visited destinations.",
+    },
+    service: { es: "Transporte turistico", en: "Tourist transport" },
     duration: "1 h 30 min aprox.",
-    passengers: "Ruta programada",
+    passengers: { es: "Ruta programada", en: "Scheduled route" },
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cordoba-viajes-personas-mayores-BXXhZwBk4OP0X10ULS5mVlxE6uTDLW.jpeg",
   },
 ]
 
 export function RecentTrips() {
+  const { language } = useLanguage()
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -77,10 +91,12 @@ export function RecentTrips() {
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-[#1a5276] mb-3">
-              VIAJES RECIENTES
+              {language === "en" ? "RECENT ROUTES" : "VIAJES RECIENTES"}
             </h2>
             <p className="text-gray-600 text-sm md:text-base max-w-2xl">
-              RUTAS FRECUENTES CON SERVICIO SEGURO, PUNTUAL Y ACOMPANAMIENTO DURANTE LA RESERVA
+              {language === "en"
+                ? "FREQUENT ROUTES WITH SAFE, PUNCTUAL SERVICE AND BOOKING SUPPORT"
+                : "RUTAS FRECUENTES CON SERVICIO SEGURO, PUNTUAL Y ACOMPANAMIENTO DURANTE LA RESERVA"}
             </p>
           </div>
 
@@ -90,7 +106,7 @@ export function RecentTrips() {
               size="icon"
               onClick={prevSlide}
               className="rounded-full border-[#1a5276]/30 text-[#1a5276] hover:bg-[#1a5276] hover:text-white"
-              aria-label="Viaje anterior"
+              aria-label={language === "en" ? "Previous route" : "Viaje anterior"}
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
@@ -99,7 +115,7 @@ export function RecentTrips() {
               size="icon"
               onClick={nextSlide}
               className="rounded-full border-[#1a5276]/30 text-[#1a5276] hover:bg-[#1a5276] hover:text-white"
-              aria-label="Viaje siguiente"
+              aria-label={language === "en" ? "Next route" : "Viaje siguiente"}
             >
               <ChevronRight className="h-5 w-5" />
             </Button>
@@ -130,38 +146,38 @@ export function RecentTrips() {
             <div className="relative z-10 flex min-h-[460px] max-w-2xl flex-col justify-end p-6 md:p-10">
               <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold text-white backdrop-blur">
                 <MapPin className="h-4 w-4 text-amber-300" />
-                {activeTrip.service}
+                {activeTrip.service[language]}
               </div>
 
               <h3 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                 {activeTrip.destination}
               </h3>
               <p className="mt-4 max-w-xl text-base md:text-lg text-white/85">
-                {activeTrip.description}
+                {activeTrip.description[language]}
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-lg bg-white/12 p-3 text-white backdrop-blur">
                   <Clock className="mb-2 h-5 w-5 text-amber-300" />
-                  <p className="text-xs text-white/65">Duracion</p>
+                  <p className="text-xs text-white/65">{language === "en" ? "Duration" : "Duracion"}</p>
                   <p className="font-semibold">{activeTrip.duration}</p>
                 </div>
                 <div className="rounded-lg bg-white/12 p-3 text-white backdrop-blur">
                   <Users className="mb-2 h-5 w-5 text-amber-300" />
-                  <p className="text-xs text-white/65">Modalidad</p>
-                  <p className="font-semibold">{activeTrip.passengers}</p>
+                  <p className="text-xs text-white/65">{language === "en" ? "Type" : "Modalidad"}</p>
+                  <p className="font-semibold">{activeTrip.passengers[language]}</p>
                 </div>
                 <div className="rounded-lg bg-white/12 p-3 text-white backdrop-blur">
                   <ShieldCheck className="mb-2 h-5 w-5 text-amber-300" />
-                  <p className="text-xs text-white/65">Seguridad</p>
-                  <p className="font-semibold">Conductor verificado</p>
+                  <p className="text-xs text-white/65">{language === "en" ? "Safety" : "Seguridad"}</p>
+                  <p className="font-semibold">{language === "en" ? "Verified driver" : "Conductor verificado"}</p>
                 </div>
               </div>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href={`/trips?service=turistico`}>
                   <Button className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white">
-                    Reservar esta ruta
+                    {language === "en" ? "Book this route" : "Reservar esta ruta"}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -170,7 +186,7 @@ export function RecentTrips() {
                   onClick={nextSlide}
                   className="text-left text-sm font-medium text-white/80 hover:text-white"
                 >
-                  Siguiente: {nextTrip.destination}
+                  {language === "en" ? "Next:" : "Siguiente:"} {nextTrip.destination}
                 </button>
               </div>
             </div>
@@ -198,9 +214,9 @@ export function RecentTrips() {
                     />
                   </div>
                   <div className="min-w-0 py-1">
-                    <p className="text-xs font-semibold text-amber-600">{trip.service}</p>
+                    <p className="text-xs font-semibold text-amber-600">{trip.service[language]}</p>
                     <h4 className="truncate font-bold text-[#1a5276]">{trip.destination}</h4>
-                    <p className="mt-1 line-clamp-2 text-xs text-gray-600">{trip.description}</p>
+                    <p className="mt-1 line-clamp-2 text-xs text-gray-600">{trip.description[language]}</p>
                   </div>
                 </button>
               )
@@ -216,7 +232,7 @@ export function RecentTrips() {
               className={`h-2 rounded-full transition-all ${
                 index === activeIndex ? "w-8 bg-[#1a5276]" : "w-2 bg-gray-400"
               }`}
-              aria-label={`Ir a ${trip.destination}`}
+              aria-label={language === "en" ? `Go to ${trip.destination}` : `Ir a ${trip.destination}`}
             />
           ))}
         </div>

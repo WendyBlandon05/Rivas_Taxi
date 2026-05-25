@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Star, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLanguage } from "@/contexts/language-context"
 
 interface ServiceReview {
   id: string
@@ -35,7 +36,7 @@ function getReviewerEmail(review: ServiceReview) {
   return review.reviewer?.email || "Usuario verificado"
 }
 
-function ReviewCard({ review }: { review: ServiceReview }) {
+function ReviewCard({ review, fallbackComment }: { review: ServiceReview; fallbackComment: string }) {
   const name = getReviewerName(review)
   const email = getReviewerEmail(review)
 
@@ -55,7 +56,7 @@ function ReviewCard({ review }: { review: ServiceReview }) {
           ))}
         </div>
         <p className="text-gray-700 text-sm mb-4 min-h-[60px]">
-          {`"${review.comment || "Excelente servicio."}"`}
+          {`"${review.comment || fallbackComment}"`}
         </p>
         <div className="flex flex-col items-center gap-2">
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#1a5276] to-amber-500 flex items-center justify-center text-white font-bold text-lg">
@@ -72,6 +73,7 @@ function ReviewCard({ review }: { review: ServiceReview }) {
 }
 
 export function Testimonials() {
+  const { language } = useLanguage()
   const [reviews, setReviews] = useState<ServiceReview[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -87,7 +89,7 @@ export function Testimonials() {
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(data.error || "No se pudieron cargar las resenas")
+          throw new Error(data.error || (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las resenas"))
         }
 
         const realReviews = (data.reviews || []).filter((review: ServiceReview) => (
@@ -97,14 +99,14 @@ export function Testimonials() {
         setReviews(realReviews)
         setCurrentIndex(0)
       } catch (err) {
-        setError(err instanceof Error ? err.message : "No se pudieron cargar las resenas")
+        setError(err instanceof Error ? err.message : (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las resenas"))
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchReviews()
-  }, [])
+  }, [language])
 
   const visibleTestimonials = useMemo(() => {
     if (reviews.length === 0) return []
@@ -132,10 +134,10 @@ export function Testimonials() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#1a5276] mb-3">
-            TU SEGURIDAD ES NUESTRA PRIORIDAD
+            {language === "en" ? "YOUR SAFETY IS OUR PRIORITY" : "TU SEGURIDAD ES NUESTRA PRIORIDAD"}
           </h2>
           <p className="text-gray-600">
-            EXPERIENCIAS COMPARTIDAS POR NUESTROS CLIENTES
+            {language === "en" ? "EXPERIENCES SHARED BY OUR CUSTOMERS" : "EXPERIENCIAS COMPARTIDAS POR NUESTROS CLIENTES"}
           </p>
         </div>
 
@@ -152,9 +154,13 @@ export function Testimonials() {
         ) : reviews.length === 0 ? (
           <div className="max-w-xl mx-auto rounded-lg border border-blue-100 bg-blue-50 p-8 text-center">
             <MessageSquare className="w-10 h-10 text-[#1a5276] mx-auto mb-3" />
-            <h3 className="font-semibold text-[#1a5276] mb-2">Aun no hay resenas reales publicadas</h3>
+            <h3 className="font-semibold text-[#1a5276] mb-2">
+              {language === "en" ? "No customer reviews published yet" : "Aun no hay resenas reales publicadas"}
+            </h3>
             <p className="text-sm text-gray-600">
-              Cuando los usuarios dejen resenas de 4 o 5 estrellas, apareceran aqui.
+              {language === "en"
+                ? "When customers leave service reviews, they will appear here."
+                : "Cuando los usuarios dejen resenas del servicio, apareceran aqui."}
             </p>
           </div>
         ) : (
@@ -171,7 +177,7 @@ export function Testimonials() {
 
               <div className="flex gap-6">
                 {visibleTestimonials.map((review) => (
-                  <ReviewCard key={review.id} review={review} />
+                  <ReviewCard key={review.id} review={review} fallbackComment={language === "en" ? "Excellent service." : "Excelente servicio."} />
                 ))}
               </div>
 
@@ -196,7 +202,7 @@ export function Testimonials() {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
 
-                <ReviewCard review={reviews[currentIndex]} />
+                <ReviewCard review={reviews[currentIndex]} fallbackComment={language === "en" ? "Excellent service." : "Excelente servicio."} />
 
                 <Button
                   variant="ghost"
@@ -216,7 +222,7 @@ export function Testimonials() {
                     className={`w-2 h-2 rounded-full transition-colors ${
                       index === currentIndex ? "bg-[#1a5276]" : "bg-gray-300"
                     }`}
-                    aria-label={`Ir a resena ${index + 1}`}
+                    aria-label={language === "en" ? `Go to review ${index + 1}` : `Ir a resena ${index + 1}`}
                   />
                 ))}
               </div>
