@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { DriverReviewModal } from "@/components/passenger/driver-review-modal"
 import { useAuth } from "@/contexts/auth-context"
+import { useLanguage } from "@/contexts/language-context"
+import { formatTripCurrency } from "@/lib/currency"
 
 interface DriverProfile {
   id: string
@@ -73,6 +75,7 @@ const CANCELLATION_REASONS = [
 export default function MyTripsPage() {
   const router = useRouter()
   const { user, profile, isLoading: authLoading } = useAuth()
+  const { language } = useLanguage()
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -380,11 +383,11 @@ export default function MyTripsPage() {
                             <div className="mt-4 pt-4 border-t">
                               {trip.discount_code && (
                                 <p className="text-sm text-green-600 mb-1">
-                                  Descuento aplicado: {trip.discount_code} (-${trip.discount_amount?.toFixed(2)})
+                                  Descuento aplicado: {trip.discount_code} (-{formatTripCurrency(trip.discount_amount, language)})
                                 </p>
                               )}
                               <p className="text-lg font-bold text-[#1a5276]">
-                                ${trip.final_price?.toFixed(2) || trip.estimated_price?.toFixed(2)} USD
+                                {formatTripCurrency(trip.final_price || trip.estimated_price, language)}
                               </p>
                             </div>
 
@@ -521,7 +524,7 @@ export default function MyTripsPage() {
                             </div>
 
                             <p className="mt-2 font-semibold text-[#1a5276]">
-                              ${trip.final_price?.toFixed(2) || trip.estimated_price?.toFixed(2)} USD
+                              {formatTripCurrency(trip.final_price || trip.estimated_price, language)}
                             </p>
 
                             {trip.status === 'completed' && getTripReview(trip)?.comment && (

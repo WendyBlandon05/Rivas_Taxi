@@ -26,6 +26,8 @@ import {
   AlertTriangle
 } from "lucide-react"
 import { DriverReviewModal } from "./driver-review-modal"
+import { useLanguage } from "@/contexts/language-context"
+import { formatTripCurrency } from "@/lib/currency"
 
 interface DriverProfile {
   id: string
@@ -106,6 +108,7 @@ const CANCELLATION_REASONS = [
 ]
 
 export function MyTrips({ onNewTrip }: MyTripsProps) {
+  const { language } = useLanguage()
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -331,7 +334,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
                   </div>
                   <div className="flex items-center gap-2 text-sm font-semibold text-[#1a5276]">
                     <DollarSign className="w-4 h-4" />
-                    <span>${(trip.final_price || trip.estimated_price || 0).toFixed(2)} USD</span>
+                    <span>{formatTripCurrency(trip.final_price || trip.estimated_price || 0, language)}</span>
                   </div>
                 </div>
 

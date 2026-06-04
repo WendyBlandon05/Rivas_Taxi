@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Spinner } from "@/components/ui/spinner"
 import type { TripData } from "@/app/trips/page"
+import { useLanguage } from "@/contexts/language-context"
+import { formatTripCurrency } from "@/lib/currency"
 
 const CANCELLATION_REASONS = [
   { id: "plans_changed", label: "Mis planes cambiaron" },
@@ -36,6 +38,7 @@ interface TripConfirmationProps {
 }
 
 export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps) {
+  const { language } = useLanguage()
   const [showMap, setShowMap] = useState(true)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [cancelReason, setCancelReason] = useState("")
@@ -48,6 +51,8 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
   
   // Check if driver is assigned
   const hasDriver = !!tripData.driver || tripData.driverAssigned
+  const estimatedPrice = tripData.priceUsd ?? tripData.estimatedPrice ?? 0
+  const finalDisplayPrice = tripData.finalPrice ?? estimatedPrice
   
   // Estimated arrival time based on distance
   const estimatedTime = tripData.distanceKm 
@@ -124,8 +129,8 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
       `Hora: ${tripData.time}`,
       `Pasajeros: ${tripData.passengers}`,
       `Distancia: ${tripData.distanceKm || 0} km`,
-      `Precio estimado: $${(tripData.estimatedPrice || 0).toFixed(2)} USD`,
-      `Precio final: $${(tripData.finalPrice || tripData.estimatedPrice || 0).toFixed(2)} USD`,
+      `Precio estimado: ${formatTripCurrency(estimatedPrice, language)}`,
+      `Precio final: ${formatTripCurrency(finalDisplayPrice, language)}`,
       tripData.driver ? `Conductor: ${tripData.driver.name || "Conductor asignado"}` : "Conductor: Pendiente de asignacion",
       "",
       "Gracias por reservar con Pacific Coast Taxi."
@@ -196,10 +201,10 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
           <p className="text-sm text-gray-500 mb-1">Codigo de Confirmacion</p>
           <p className="text-3xl font-bold text-[#1a5276] tracking-wider">{confirmationCode}</p>
         </div>
-        {tripData.finalPrice && (
+        {finalDisplayPrice > 0 && (
           <div className="mt-4 flex items-center justify-center gap-2">
             <DollarSign className="w-5 h-5 text-green-600" />
-            <span className="text-2xl font-bold text-green-700">${tripData.finalPrice.toFixed(2)} USD</span>
+            <span className="text-2xl font-bold text-green-700">{formatTripCurrency(finalDisplayPrice, language)}</span>
           </div>
         )}
       </div>

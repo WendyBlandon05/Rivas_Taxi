@@ -13,6 +13,7 @@ import { NameInput } from "@/components/ui/name-input"
 import type { TripData } from "@/app/trips/page"
 import { useAuth } from "@/contexts/auth-context"
 import { useLanguage } from "@/contexts/language-context"
+import { formatTripCurrency, formatTripRate } from "@/lib/currency"
 
 interface Location {
   lat: number
@@ -77,7 +78,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, isLoading: authLoading } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
   const [couponApplied, setCouponApplied] = useState<string | null>(null)
@@ -564,18 +565,18 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
                     couponApplied ? (
                       <div>
                         <p className="text-xl text-gray-400 line-through">
-                          ${tripDetails.estimatedPrice.toFixed(2)} USD
+                          {formatTripCurrency(tripDetails.estimatedPrice, language)}
                         </p>
                         <p className="text-3xl font-bold text-green-600">
-                          ${finalPrice?.toFixed(2)} USD
+                          {formatTripCurrency(finalPrice, language)}
                         </p>
                         <p className="text-xs text-green-600">
-                          {t("booking.saved")} ${(tripDetails.estimatedPrice - (finalPrice || 0)).toFixed(2)} USD
+                          {t("booking.saved")} {formatTripCurrency(tripDetails.estimatedPrice - (finalPrice || 0), language)}
                         </p>
                       </div>
                     ) : (
                       <p className="text-3xl font-bold text-[#1a5276]">
-                        ${tripDetails.estimatedPrice.toFixed(2)} USD
+                        {formatTripCurrency(tripDetails.estimatedPrice, language)}
                       </p>
                     )
                   ) : (
@@ -588,7 +589,7 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
               </div>
               {tripDetails && (
                 <p className="text-xs text-gray-500 mt-2">
-                  {t("booking.baseFare")} $5.00 + ${PRICE_PER_KM.toFixed(2)}/km
+                  {t("booking.baseFare")} {formatTripRate(5, language)} + {formatTripRate(PRICE_PER_KM, language)}/km
                 </p>
               )}
             </div>

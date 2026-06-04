@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { useAuth } from "@/contexts/auth-context"
 import { useLanguage } from "@/contexts/language-context"
 import type { Language } from "@/contexts/language-context"
+import { formatTripCurrency, formatTripRate } from "@/lib/currency"
 
 type ActionIcon = "reserve" | "phone" | "coupon" | "route" | "login" | "trips"
 
@@ -162,7 +163,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
         return {
           text: isEnglish
             ? `The ride from ${result.origin} to ${result.destination} is approximately ${result.distance} km.\n\nEstimate: $${result.price.toFixed(2)} USD\nBase fare: $${BASE_FARE.toFixed(2)} + $${PRICE_PER_KM.toFixed(2)}/km.\n\nThe final price is confirmed in the map booking form.`
-            : `El viaje desde ${result.origin} hasta ${result.destination} tiene una distancia aproximada de ${result.distance} km.\n\nEstimado: $${result.price.toFixed(2)} USD\nTarifa base: $${BASE_FARE.toFixed(2)} + $${PRICE_PER_KM.toFixed(2)}/km.\n\nEl precio final se confirma en el formulario con el mapa.`,
+            : `El viaje desde ${result.origin} hasta ${result.destination} tiene una distancia aproximada de ${result.distance} km.\n\nEstimado: ${formatTripCurrency(result.price, language)}\nTarifa base: ${formatTripRate(BASE_FARE, language)} + ${formatTripRate(PRICE_PER_KM, language)}/km.\n\nEl precio final se confirma en el formulario con el mapa.`,
           actions: bookingActions(isLoggedIn, language),
         }
       }
@@ -171,7 +172,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? `To quote a ride, I need pickup and destination. Example: "How much from Rivas to San Juan del Sur?"\n\nFare: base $${BASE_FARE.toFixed(2)} + $${PRICE_PER_KM.toFixed(2)}/km.`
-        : `Para cotizar necesito origen y destino. Ejemplo: "Cuanto cuesta de Rivas a San Juan del Sur".\n\nTarifa: base $${BASE_FARE.toFixed(2)} + $${PRICE_PER_KM.toFixed(2)}/km.`,
+        : `Para cotizar necesito origen y destino. Ejemplo: "Cuanto cuesta de Rivas a San Juan del Sur".\n\nTarifa: base ${formatTripRate(BASE_FARE, language)} + ${formatTripRate(PRICE_PER_KM, language)}/km.`,
       actions: [
         { label: isEnglish ? "Rivas to San Juan" : "Rivas a San Juan", prompt: isEnglish ? "How much from Rivas to San Juan del Sur?" : "Cuanto cuesta de Rivas a San Juan del Sur?", icon: "route" },
         { label: isEnglish ? "Airport to San Juan" : "Aeropuerto a San Juan", prompt: isEnglish ? "How much from the airport to San Juan del Sur?" : "Cuanto cuesta del aeropuerto a San Juan del Sur?", icon: "route" },

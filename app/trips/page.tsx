@@ -28,6 +28,7 @@ export interface TripData {
   phone: string
   name: string
   priceUsd?: number
+  estimatedPrice?: number
   finalPrice?: number
   distanceKm?: number
   status?: string
