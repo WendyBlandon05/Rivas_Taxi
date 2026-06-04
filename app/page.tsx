@@ -1,5 +1,6 @@
 import { Header } from "@/components/passenger/header"
 import { Hero } from "@/components/passenger/hero"
+import { VisitCounter } from "@/components/passenger/visit-counter"
 import { Testimonials } from "@/components/passenger/testimonials"
 import { RecentTrips } from "@/components/passenger/recent-trips"
 import { FAQ } from "@/components/passenger/faq"
@@ -14,6 +15,7 @@ export default function HomePage() {
     <main className="min-h-screen">
       <Header />
       <Hero />
+      <VisitCounter />
       <Services />
       <Testimonials />
       <RecentTrips />

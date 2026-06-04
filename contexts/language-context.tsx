@@ -28,6 +28,8 @@ const dictionary: Dictionary = {
   },
   "hero.bookNow": { es: "RESERVAR AHORA", en: "BOOK NOW" },
   "hero.viewServices": { es: "VER SERVICIOS", en: "VIEW SERVICES" },
+  "visitCounter.visits": { es: "Visitas", en: "Visits" },
+  "visitCounter.today": { es: "Hoy", en: "Today" },
 
   "services.title": { es: "NUESTROS SERVICIOS DE TRANSPORTE", en: "OUR TRANSPORTATION SERVICES" },
   "services.subtitle": {
