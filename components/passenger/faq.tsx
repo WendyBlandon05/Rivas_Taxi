@@ -11,31 +11,31 @@ import { useLanguage } from "@/contexts/language-context"
 const faqs = [
   {
     id: "1",
-    question: { es: "COMO PUEDO RESERVAR UN VIAJE?", en: "HOW CAN I BOOK A RIDE?" },
+    question: { es: "¿CÓMO PUEDO RESERVAR UN VIAJE?", en: "HOW CAN I BOOK A RIDE?" },
     answer: {
-      es: "Puede reservar su viaje por el asistente virtual o mediante nuestro formulario en linea indicando origen, destino y horario deseado.",
+      es: "Puede reservar su viaje por el asistente virtual o mediante nuestro formulario en línea indicando origen, destino y horario deseado.",
       en: "You can book through the virtual assistant or with our online form by entering pickup, destination and preferred time.",
     },
   },
   {
     id: "2",
-    question: { es: "ATIENDEN TRASLADOS FUERA DE RIVAS?", en: "DO YOU OFFER RIDES OUTSIDE RIVAS?" },
+    question: { es: "¿ATIENDEN TRASLADOS FUERA DE RIVAS?", en: "DO YOU OFFER RIDES OUTSIDE RIVAS?" },
     answer: {
-      es: "Si, realizamos traslados a cualquier destino de Nicaragua incluyendo Managua, Granada, Leon, Masaya y mas. Consulte nuestras tarifas para viajes largos.",
+      es: "Sí, realizamos traslados a cualquier destino de Nicaragua incluyendo Managua, Granada, León, Masaya y más. Consulte nuestras tarifas para viajes largos.",
       en: "Yes, we offer transfers to destinations across Nicaragua, including Managua, Granada, Leon, Masaya and more. Ask us about long-distance rates.",
     },
   },
   {
     id: "3",
-    question: { es: "ES NECESARIO REALIZAR DEPOSITO PARA VIAJES LARGOS?", en: "IS A DEPOSIT REQUIRED FOR LONG RIDES?" },
+    question: { es: "¿ES NECESARIO REALIZAR DEPÓSITO PARA VIAJES LARGOS?", en: "IS A DEPOSIT REQUIRED FOR LONG RIDES?" },
     answer: {
-      es: "Para viajes de larga distancia, solicitamos un deposito del 50% para confirmar la reserva. El resto se paga al finalizar el servicio.",
+      es: "Para viajes de larga distancia, solicitamos un depósito del 50% para confirmar la reserva. El resto se paga al finalizar el servicio.",
       en: "For long-distance rides, we request a 50% deposit to confirm the booking. The rest is paid after the service.",
     },
   },
   {
     id: "4",
-    question: { es: "PUEDEN RECOGERME EN HOTELES, TERMINALES O AEROPUERTOS?", en: "CAN YOU PICK ME UP AT HOTELS, TERMINALS OR AIRPORTS?" },
+    question: { es: "¿PUEDEN RECOGERME EN HOTELES, TERMINALES O AEROPUERTOS?", en: "CAN YOU PICK ME UP AT HOTELS, TERMINALS OR AIRPORTS?" },
     answer: {
       es: "Por supuesto, ofrecemos servicio de recogida en hoteles, terminales de buses, aeropuertos y cualquier ubicación acordada dentro de nuestra área de cobertura.",
       en: "Of course. We offer pickup from hotels, bus terminals, airports and any agreed location within our coverage area.",
@@ -43,9 +43,9 @@ const faqs = [
   },
   {
     id: "5",
-    question: { es: "QUE METODOS DE PAGO ACEPTAN?", en: "WHAT PAYMENT METHODS DO YOU ACCEPT?" },
+    question: { es: "¿QUÉ MÉTODOS DE PAGO ACEPTAN?", en: "WHAT PAYMENT METHODS DO YOU ACCEPT?" },
     answer: {
-      es: "Aceptamos efectivo en cordobas y dolares, transferencias bancarias, pagos con tarjeta de credito/debito y pagos digitales.",
+      es: "Aceptamos efectivo en córdobas y dólares, transferencias bancarias, pagos con tarjeta de crédito/débito y pagos digitales.",
       en: "We accept cash in cordobas and dollars, bank transfers, credit/debit cards and digital payments.",
     },
   },

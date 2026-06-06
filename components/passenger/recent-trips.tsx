@@ -11,7 +11,7 @@ const trips = [
     id: 1,
     destination: "PLAYA GIGANTE",
     description: {
-      es: "Traslados comodos para grupos que buscan playa, descanso y una ruta segura.",
+      es: "Traslados cómodos para grupos que buscan playa, descanso y una ruta segura.",
       en: "Comfortable transfers for groups looking for beach time, rest and a safe route.",
     },
     service: { es: "Servicio turístico", en: "Tourist service" },
@@ -47,7 +47,7 @@ const trips = [
     id: 4,
     destination: "GRANADA",
     description: {
-      es: "Viajes para conectar Rivas con uno de los destinos mas visitados.",
+      es: "Viajes para conectar Rivas con uno de los destinos más visitados.",
       en: "Rides connecting Rivas with one of Nicaragua's most visited destinations.",
     },
     service: { es: "Transporte turístico", en: "Tourist transport" },
@@ -96,7 +96,7 @@ export function RecentTrips() {
             <p className="text-gray-600 text-sm md:text-base max-w-2xl">
               {language === "en"
                 ? "FREQUENT ROUTES WITH SAFE, PUNCTUAL SERVICE AND BOOKING SUPPORT"
-                : "RUTAS FRECUENTES CON SERVICIO SEGURO, PUNTUAL Y ACOMPANAMIENTO DURANTE LA RESERVA"}
+                : "RUTAS FRECUENTES CON SERVICIO SEGURO, PUNTUAL Y ACOMPAÑAMIENTO DURANTE LA RESERVA"}
             </p>
           </div>
 
@@ -159,7 +159,7 @@ export function RecentTrips() {
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-lg bg-white/12 p-3 text-white backdrop-blur">
                   <Clock className="mb-2 h-5 w-5 text-amber-300" />
-                  <p className="text-xs text-white/65">{language === "en" ? "Duration" : "Duracion"}</p>
+                  <p className="text-xs text-white/65">{language === "en" ? "Duration" : "Duración"}</p>
                   <p className="font-semibold">{activeTrip.duration}</p>
                 </div>
                 <div className="rounded-lg bg-white/12 p-3 text-white backdrop-blur">
