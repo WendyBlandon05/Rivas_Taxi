@@ -150,9 +150,6 @@ export function Footer() {
               <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">
                 {t("footer.privacy")}
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">
-                {t("footer.terms")}
-              </Link>
             </div>
           </div>
         </div>

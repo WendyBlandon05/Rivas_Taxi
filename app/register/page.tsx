@@ -261,11 +261,7 @@ export default function RegisterPage() {
                   onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
                 />
                 <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
-                  Acepto los{" "}
-                  <Link href="/terms" className="text-[#1a5276] hover:underline">
-                    términos y condiciones
-                  </Link>{" "}
-                  y la{" "}
+                  Acepto la{" "}
                   <Link href="/privacy" className="text-[#1a5276] hover:underline">
                     política de privacidad
                   </Link>
