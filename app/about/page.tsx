@@ -22,8 +22,8 @@ const clientImages = [
 ]
 
 const values = [
-  { icon: Shield, title: { es: "Seguridad", en: "Safety" }, description: { es: "Tu bienestar es nuestra prioridad. Conductores verificados y vehiculos en optimas condiciones.", en: "Your well-being is our priority. Verified drivers and vehicles in excellent condition." } },
-  { icon: Clock, title: { es: "Puntualidad", en: "Punctuality" }, description: { es: "Respetamos tu tiempo. Llegamos siempre a la hora acordada para que disfrutes al maximo.", en: "We respect your time. We arrive at the agreed time so you can enjoy every moment." } },
+  { icon: Shield, title: { es: "Seguridad", en: "Safety" }, description: { es: "Tu bienestar es nuestra prioridad. Conductores verificados y vehículos en óptimas condiciones.", en: "Your well-being is our priority. Verified drivers and vehicles in excellent condition." } },
+  { icon: Clock, title: { es: "Puntualidad", en: "Punctuality" }, description: { es: "Respetamos tu tiempo. Llegamos siempre a la hora acordada para que disfrutes al máximo.", en: "We respect your time. We arrive at the agreed time so you can enjoy every moment." } },
   { icon: Heart, title: { es: "Pasión", en: "Passion" }, description: { es: "Amamos Nicaragua y queremos compartir su belleza contigo. Cada viaje es una experiencia única.", en: "We love Nicaragua and want to share its beauty with you. Every ride is a unique experience." } },
   { icon: Users, title: { es: "Servicio Personalizado", en: "Personalized Service" }, description: { es: "Nos adaptamos a tus necesidades. Tours a tu medida para grupos, familias o viajeros solos.", en: "We adapt to your needs with custom rides for groups, families or solo travelers." } },
 ]
@@ -115,7 +115,7 @@ export default function AboutPage() {
                   <>
                     <p><span className="font-semibold text-[#1a5276]">Pacific Coast Taxi</span> nació en 2025 en el corazón de Rivas, Nicaragua, con un sueño claro: ofrecer a los viajeros extranjeros una forma segura, cómoda y auténtica de explorar las joyas del Pacífico nicaragüense.</p>
                     <p>Desde nuestros inicios, nos hemos dedicado a crear experiencias memorables para mochileros, familias y aventureros que llegan a nuestras costas buscando playas paradisíacas, cultura vibrante y la calidez de nuestra gente.</p>
-                    <p>Hoy, somos mas que un servicio de transporte. Somos embajadores de nuestra tierra, guias apasionados que conocen cada rincon de San Juan del Sur, Playa Maderas, Playa Gigante y todos los destinos que hacen de Rivas un lugar magico.</p>
+                    <p>Hoy, somos más que un servicio de transporte. Somos embajadores de nuestra tierra, guías apasionados que conocen cada rincón de San Juan del Sur, Playa Maderas, Playa Gigante y todos los destinos que hacen de Rivas un lugar mágico.</p>
                   </>
                 )}
               </div>
@@ -128,7 +128,7 @@ export default function AboutPage() {
                 </Link>
                 <Link href="/contact">
                   <Button variant="outline" className="border-2 border-[#1a5276] text-[#1a5276] hover:bg-[#1a5276] hover:text-white font-bold px-6 py-3 rounded-full">
-                    {language === "en" ? "Contact Us" : "Contactanos"}
+                    {language === "en" ? "Contact Us" : "Contáctanos"}
                   </Button>
                 </Link>
               </div>
@@ -196,7 +196,7 @@ export default function AboutPage() {
             <p className="text-gray-600 max-w-2xl mx-auto">
               {language === "en"
                 ? "Every ride is guided by principles that define us as a company and as proud Nicaraguans."
-                : "Cada viaje que realizamos esta guiado por principios que nos definen como empresa y como nicaraguenses orgullosos."}
+                : "Cada viaje que realizamos está guiado por principios que nos definen como empresa y como nicaragüenses orgullosos."}
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -260,7 +260,7 @@ export default function AboutPage() {
         </div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            {language === "en" ? "Ready for your next adventure?" : "Listo para tu proxima aventura?"}
+            {language === "en" ? "Ready for your next adventure?" : "¿Listo para tu próxima aventura?"}
           </h2>
           <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
             {language === "en"
