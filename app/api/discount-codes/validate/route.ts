@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     const normalizedCode = String(code || "").trim().toUpperCase()
 
     if (!normalizedCode) {
-      return NextResponse.json({ error: "Codigo requerido" }, { status: 400 })
+      return NextResponse.json({ error: "Código requerido" }, { status: 400 })
     }
 
     const { data: { user } } = await supabase.auth.getUser()
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       if (!user) {
         return NextResponse.json({
           valid: false,
-          error: "Inicia sesion o registrate para usar este cupon de primer viaje",
+          error: "Inicia sesión o regístrate para usar este cupón de primer viaje",
         }, { status: 401 })
       }
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       if ((count || 0) > 0) {
         return NextResponse.json({
           valid: false,
-          error: "Este cupon solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.",
+          error: "Este cupón solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.",
         }, { status: 400 })
       }
     }
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     if (error || !data) {
       return NextResponse.json({ 
         valid: false, 
-        error: "Codigo de descuento invalido o expirado" 
+        error: "Código de descuento inválido o expirado" 
       }, { status: 404 })
     }
 
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     if (data.max_uses && data.current_uses >= data.max_uses) {
       return NextResponse.json({ 
         valid: false, 
-        error: "Este codigo ya alcanzo el limite de usos" 
+        error: "Este código ya alcanzó el límite de usos" 
       }, { status: 400 })
     }
 
@@ -71,14 +71,14 @@ export async function POST(request: Request) {
     if (data.valid_from && new Date(data.valid_from) > now) {
       return NextResponse.json({ 
         valid: false, 
-        error: "Este codigo aun no esta activo" 
+        error: "Este código aún no está activo" 
       }, { status: 400 })
     }
 
     if (data.valid_until && new Date(data.valid_until) < now) {
       return NextResponse.json({ 
         valid: false, 
-        error: "Este codigo ha expirado" 
+        error: "Este código ha expirado" 
       }, { status: 400 })
     }
 

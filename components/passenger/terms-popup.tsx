@@ -43,10 +43,10 @@ export function TermsPopup() {
       <DialogContent className="sm:max-w-lg [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-[#1a5276] text-xl font-bold">
-            Terminos y Condiciones
+            Términos y Condiciones
           </DialogTitle>
           <DialogDescription>
-            Por favor, lea y acepte nuestros terminos y condiciones para continuar.
+            Por favor, lea y acepte nuestros términos y condiciones para continuar.
           </DialogDescription>
         </DialogHeader>
 
@@ -54,14 +54,14 @@ export function TermsPopup() {
           <div className="space-y-4 text-sm text-gray-600">
             <h4 className="font-semibold text-[#1a5276]">1. Servicio de Transporte</h4>
             <p>
-              Pacific Coast Taxi ofrece servicios de transporte turistico y local en el departamento 
+              Pacific Coast Taxi ofrece servicios de transporte turístico y local en el departamento 
               de Rivas, Nicaragua. Nos comprometemos a proporcionar un servicio seguro, puntual y 
               de calidad.
             </p>
 
             <h4 className="font-semibold text-[#1a5276]">2. Reservaciones</h4>
             <p>
-              Las reservaciones pueden realizarse a traves de nuestro sitio web, aplicacion movil 
+              Las reservaciones pueden realizarse a través de nuestro sitio web, aplicación móvil 
               o llamada telefonica. Una vez confirmada la reserva, el usuario recibira un correo 
               de confirmacion con los detalles del viaje.
             </p>
@@ -82,7 +82,7 @@ export function TermsPopup() {
 
             <h4 className="font-semibold text-[#1a5276]">5. Responsabilidades del Usuario</h4>
             <p>
-              El usuario se compromete a proporcionar informacion veridica, estar puntual 
+              El usuario se compromete a proporcionar información verídica, estar puntual 
               en el punto de recogida y respetar las normas de conducta durante el viaje.
             </p>
 
@@ -102,14 +102,14 @@ export function TermsPopup() {
 
             <h4 className="font-semibold text-[#1a5276]">8. Privacidad</h4>
             <p>
-              La informacion personal proporcionada sera utilizada unicamente para la 
+              La información personal proporcionada será utilizada únicamente para la 
               prestacion del servicio y no sera compartida con terceros sin consentimiento.
             </p>
 
             <h4 className="font-semibold text-[#1a5276]">9. Contacto</h4>
             <p>
               Para cualquier consulta, queja o sugerencia, puede contactarnos a traves de 
-              nuestros canales oficiales: telefono, correo electronico o redes sociales.
+              nuestros canales oficiales: teléfono, correo electrónico o redes sociales.
             </p>
           </div>
         </ScrollArea>
@@ -125,7 +125,7 @@ export function TermsPopup() {
               htmlFor="terms"
               className="text-sm font-medium leading-none cursor-pointer"
             >
-              He leido y acepto los terminos y condiciones
+              He leído y acepto los términos y condiciones
             </label>
           </div>
           <Button

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { email } = await request.json()
 
     if (!email) {
-      return NextResponse.json({ error: "El correo electronico es requerido" }, { status: 400 })
+      return NextResponse.json({ error: "El correo electrónico es requerido" }, { status: 400 })
     }
 
     const origin = new URL(request.url).origin
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
-      message: "Si el correo existe, enviaremos instrucciones para restablecer la contrasena.",
+      message: "Si el correo existe, enviaremos instrucciones para restablecer la contraseña.",
     })
   } catch (error) {
     console.error("Error requesting password reset:", error)

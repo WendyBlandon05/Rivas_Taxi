@@ -28,7 +28,7 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      setError("Por favor selecciona una calificacion")
+      setError("Por favor selecciona una calificación")
       return
     }
     if (!comment.trim()) {
@@ -53,7 +53,7 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "No se pudo enviar la resena")
+        throw new Error(data.error || "No se pudo enviar la reseña")
       }
 
       onSubmit({ rating, comment })
@@ -66,7 +66,7 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
         onClose()
       }, 2000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo enviar la resena")
+      setError(err instanceof Error ? err.message : "No se pudo enviar la reseña")
     } finally {
       setIsSubmitting(false)
     }
@@ -80,10 +80,10 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
             <DialogHeader>
               <DialogTitle className="text-[#1a5276] flex items-center gap-2">
                 <Star className="w-5 h-5 text-amber-500" />
-                Deja tu Resena
+                Deja tu Reseña
               </DialogTitle>
               <DialogDescription>
-                Tu opinion es muy importante para nosotros. Cuentanos como fue tu experiencia con Pacific Coast Taxi.
+                Tu opinión es muy importante para nosotros. Cuéntanos cómo fue tu experiencia con Pacific Coast Taxi.
               </DialogDescription>
             </DialogHeader>
 
@@ -128,7 +128,7 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
                   Tu comentario
                 </label>
                 <Textarea
-                  placeholder="Cuentanos sobre tu experiencia..."
+                  placeholder="Cuéntanos sobre tu experiencia..."
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   className="min-h-[120px] resize-none"
@@ -164,7 +164,7 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
-                    Enviar Resena
+                    Enviar Reseña
                   </>
                 )}
               </Button>
@@ -176,10 +176,10 @@ export function ReviewForm({ isOpen, onClose, onSubmit }: ReviewFormProps) {
               <Star className="w-8 h-8 text-green-500 fill-green-500" />
             </div>
             <h3 className="text-xl font-bold text-[#1a5276] mb-2">
-              Gracias por tu resena
+              Gracias por tu reseña
             </h3>
             <p className="text-gray-600">
-              Tu opinion nos ayuda a mejorar nuestro servicio
+              Tu opinión nos ayuda a mejorar nuestro servicio
             </p>
           </div>
         )}

@@ -24,12 +24,12 @@ export default function ResetPasswordPage() {
     setError("")
 
     if (password.length < 6) {
-      setError("La contrasena debe tener al menos 6 caracteres")
+      setError("La contraseña debe tener al menos 6 caracteres")
       return
     }
 
     if (password !== confirmPassword) {
-      setError("Las contrasenas no coinciden")
+      setError("Las contraseñas no coinciden")
       return
     }
 
@@ -62,13 +62,13 @@ export default function ResetPasswordPage() {
 
         <Card className="shadow-2xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-[#1a5276]">Nueva contrasena</CardTitle>
-            <CardDescription>Escribe una contrasena nueva para recuperar el acceso a tu cuenta.</CardDescription>
+            <CardTitle className="text-2xl text-[#1a5276]">Nueva contraseña</CardTitle>
+            <CardDescription>Escribe una contraseña nueva para recuperar el acceso a tu cuenta.</CardDescription>
           </CardHeader>
           <CardContent>
             {success ? (
               <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-                Contrasena actualizada. Te estamos llevando al inicio de sesion.
+                Contraseña actualizada. Te estamos llevando al inicio de sesión.
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label htmlFor="password">Nueva contrasena</Label>
+                  <Label htmlFor="password">Nueva contraseña</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirmar contrasena</Label>
+                  <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
@@ -116,14 +116,14 @@ export default function ResetPasswordPage() {
                   </div>
                 </div>
                 <Button type="submit" className="w-full bg-[#1a5276] hover:bg-[#154360] text-white" disabled={isLoading}>
-                  {isLoading ? "Actualizando..." : "Actualizar contrasena"}
+                  {isLoading ? "Actualizando..." : "Actualizar contraseña"}
                 </Button>
               </form>
             )}
           </CardContent>
           <CardFooter>
             <Link href="/login" className="mx-auto text-sm text-[#1a5276] hover:underline">
-              Volver al inicio de sesion
+              Volver al inicio de sesión
             </Link>
           </CardFooter>
         </Card>

@@ -67,13 +67,13 @@ export async function POST(request: NextRequest) {
 
     if (!email || !resolvedFullName || !phone || !resolvedLicenseNumber || !address || !vehicle_model || !vehicle_plate || !vehicle_color) {
       return NextResponse.json({
-        error: 'Correo, nombre, telefono, cedula/licencia, direccion, modelo, color y placa son requeridos'
+        error: 'Correo, nombre, teléfono, cédula/licencia, dirección, modelo, color y placa son requeridos'
       }, { status: 400 })
     }
 
     if (!isValidNicaraguaPhone(phone)) {
       return NextResponse.json({
-        error: 'El telefono debe iniciar con +505 y tener 8 numeros despues'
+        error: 'El teléfono debe iniciar con +505 y tener 8 números después'
       }, { status: 400 })
     }
 

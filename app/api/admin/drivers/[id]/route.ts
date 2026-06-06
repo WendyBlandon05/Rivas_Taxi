@@ -49,7 +49,7 @@ export async function PATCH(
     const cedula = String(body.cedula_number || "").trim()
 
     if (!isValidNicaraguaPhone(phone)) {
-      return NextResponse.json({ error: "El telefono debe iniciar con +505 y tener 8 numeros despues" }, { status: 400 })
+      return NextResponse.json({ error: "El teléfono debe iniciar con +505 y tener 8 números después" }, { status: 400 })
     }
 
     if (!isValidCedula(cedula)) {

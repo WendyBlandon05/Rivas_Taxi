@@ -233,7 +233,7 @@ export async function POST(request: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Para tu mayor seguridad debes registrarte o iniciar sesion antes de reservar un viaje.' },
+        { error: 'Para tu mayor seguridad debes registrarte o iniciar sesión antes de reservar un viaje.' },
         { status: 401 }
       )
     }
@@ -241,7 +241,7 @@ export async function POST(request: Request) {
     // Validate required fields
     if (!passengerName || !passengerPhone || !origin || !destination) {
       return NextResponse.json(
-        { error: 'Faltan campos requeridos (nombre, telefono, origen, destino)' },
+        { error: 'Faltan campos requeridos (nombre, teléfono, origen, destino)' },
         { status: 400 }
       )
     }
@@ -290,7 +290,7 @@ export async function POST(request: Request) {
 
         if ((previousTrips || 0) > 0) {
           return NextResponse.json(
-            { error: 'El cupon BIENVENIDO20 solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.' },
+            { error: 'El cupón BIENVENIDO20 solo aplica para tu primer viaje. Si ya reservaste antes, aunque hayas cancelado, no se puede usar de nuevo.' },
             { status: 400 }
           )
         }
@@ -305,7 +305,7 @@ export async function POST(request: Request) {
 
       if (couponError || !coupon) {
         return NextResponse.json(
-          { error: 'Codigo de descuento invalido o expirado' },
+          { error: 'Código de descuento inválido o expirado' },
           { status: 400 }
         )
       }
@@ -313,28 +313,28 @@ export async function POST(request: Request) {
       const now = new Date()
       if (coupon.valid_from && new Date(coupon.valid_from) > now) {
         return NextResponse.json(
-          { error: 'Este codigo aun no esta activo' },
+          { error: 'Este código aún no está activo' },
           { status: 400 }
         )
       }
 
       if (coupon.valid_until && new Date(coupon.valid_until) < now) {
         return NextResponse.json(
-          { error: 'Este codigo ha expirado' },
+          { error: 'Este código ha expirado' },
           { status: 400 }
         )
       }
 
       if (coupon.max_uses && coupon.current_uses >= coupon.max_uses) {
         return NextResponse.json(
-          { error: 'Este codigo ya alcanzo el limite de usos' },
+          { error: 'Este código ya alcanzó el límite de usos' },
           { status: 400 }
         )
       }
 
       if (coupon.min_trip_amount && estimatedPrice < coupon.min_trip_amount) {
         return NextResponse.json(
-          { error: `Este cupon aplica desde $${Number(coupon.min_trip_amount).toFixed(2)} USD` },
+          { error: `Este cupón aplica desde $${Number(coupon.min_trip_amount).toFixed(2)} USD` },
           { status: 400 }
         )
       }
@@ -469,8 +469,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           message: assignedDriverId
-            ? 'Reservacion confirmada! Un conductor ha sido asignado.'
-            : 'Reservacion creada. Estamos buscando un conductor disponible.',
+            ? '¡Reservación confirmada! Un conductor ha sido asignado.'
+            : 'Reservación creada. Estamos buscando un conductor disponible.',
           trip: fallbackTrip,
           driverAssigned: !!assignedDriverId,
           confirmation_code: confirmationCode
@@ -481,7 +481,7 @@ export async function POST(request: Request) {
     if (tripError) {
       console.error('[v0] Error creating trip:', tripError)
       return NextResponse.json(
-        { error: 'Error al crear la reservacion: ' + tripError.message },
+        { error: 'Error al crear la reservación: ' + tripError.message },
         { status: 500 }
       )
     }
@@ -495,8 +495,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       message: assignedDriverId 
-        ? 'Reservacion confirmada! Un conductor ha sido asignado.'
-        : 'Reservacion creada. Estamos buscando un conductor disponible.',
+        ? '¡Reservación confirmada! Un conductor ha sido asignado.'
+        : 'Reservación creada. Estamos buscando un conductor disponible.',
       trip,
       driverAssigned: !!assignedDriverId,
       confirmation_code: confirmationCode
@@ -505,7 +505,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[v0] Server error creating trip:', error)
     return NextResponse.json(
-      { error: 'Error del servidor al crear la reservacion' },
+      { error: 'Error del servidor al crear la reservación' },
       { status: 500 }
     )
   }

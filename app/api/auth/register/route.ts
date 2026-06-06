@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ 
-      message: "Registro exitoso. Por favor verifica tu correo electronico.",
+      message: "Registro exitoso. Por favor verifica tu correo electrónico.",
       user: data.user 
     })
   } catch (error) {

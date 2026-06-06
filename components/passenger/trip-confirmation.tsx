@@ -90,7 +90,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
   }
 
   const handleShare = async () => {
-    const shareText = `Viaje reservado de ${tripData.origin} a ${tripData.destination}. Codigo: ${confirmationCode}`
+    const shareText = `Viaje reservado de ${tripData.origin} a ${tripData.destination}. Código: ${confirmationCode}`
     const shareData = {
       title: "Mi viaje con Pacific Coast Taxi",
       text: shareText,
@@ -117,12 +117,12 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
   const handleDownloadReceipt = () => {
     const lines = [
       "PACIFIC COAST TAXI",
-      "Comprobante de reservacion",
+      "Comprobante de reservación",
       "",
-      `Codigo: ${confirmationCode}`,
+      `Código: ${confirmationCode}`,
       `Estado: ${tripData.status === "confirmed" ? "Confirmado" : "Pendiente"}`,
       `Pasajero: ${tripData.name}`,
-      `Telefono: ${tripData.phone}`,
+      `Teléfono: ${tripData.phone}`,
       `Origen: ${tripData.origin}`,
       `Destino: ${tripData.destination}`,
       `Fecha: ${tripData.date}`,
@@ -153,9 +153,9 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-red-700 mb-2">Viaje Cancelado</h2>
-          <p className="text-red-600 mb-4">Tu reservacion ha sido cancelada exitosamente</p>
+          <p className="text-red-600 mb-4">Tu reservación ha sido cancelada exitosamente</p>
           <div className="bg-white rounded-lg p-4 inline-block">
-            <p className="text-sm text-gray-500 mb-1">Codigo de Reservacion</p>
+            <p className="text-sm text-gray-500 mb-1">Código de Reservación</p>
             <p className="text-xl font-bold text-gray-400 tracking-wider line-through">{confirmationCode}</p>
           </div>
         </div>
@@ -189,7 +189,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
       <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-green-700 mb-2">
-          {tripData.status === "confirmed" ? "Reservacion Confirmada" : "Reservacion Pendiente"}
+          {tripData.status === "confirmed" ? "Reservación Confirmada" : "Reservación Pendiente"}
         </h2>
         <p className="text-green-600 mb-4">
           {hasDriver 
@@ -198,7 +198,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
           }
         </p>
         <div className="bg-white rounded-lg p-4 inline-block">
-          <p className="text-sm text-gray-500 mb-1">Codigo de Confirmacion</p>
+          <p className="text-sm text-gray-500 mb-1">Código de Confirmación</p>
           <p className="text-3xl font-bold text-[#1a5276] tracking-wider">{confirmationCode}</p>
         </div>
         {finalDisplayPrice > 0 && (
@@ -308,7 +308,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
             <div className="flex items-start gap-3">
               <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
               <div>
-                <p className="text-sm text-gray-500">Telefono</p>
+                <p className="text-sm text-gray-500">Teléfono</p>
                 <p className="font-medium">{tripData.phone}</p>
               </div>
             </div>
@@ -412,7 +412,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
               />
             )}
             <p className="text-xs text-gray-500 mt-3 text-center">
-              Podras ver la ubicacion del conductor en tiempo real durante tu viaje
+              Podrás ver la ubicación del conductor en tiempo real durante tu viaje
             </p>
           </div>
         </div>
@@ -464,7 +464,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertTriangle className="w-5 h-5" />
-              Cancelar Reservacion
+              Cancelar Reservación
             </DialogTitle>
             <DialogDescription>
               Por favor, selecciona el motivo de la cancelacion. Esto nos ayuda a mejorar nuestro servicio.
@@ -521,9 +521,9 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
 
       {/* Contact Info */}
       <div className="text-center text-gray-600 text-sm bg-white rounded-lg p-6 shadow">
-        <p className="mb-2">Tienes alguna pregunta sobre tu reservacion?</p>
+        <p className="mb-2">¿Tienes alguna pregunta sobre tu reservación?</p>
         <p className="font-semibold text-[#1a5276]">
-          Llamanos al <a href="https://wa.me/50577502626" target="_blank" className="text-amber-500 hover:underline">+505 7750-2626</a> o escribenos por WhatsApp
+          Llámanos al <a href="https://wa.me/50577502626" target="_blank" className="text-amber-500 hover:underline">+505 7750-2626</a> o escríbenos por WhatsApp
         </p>
       </div>
     </div>

@@ -392,9 +392,9 @@ export default function DriverDashboard() {
               <X className="w-8 h-8 text-red-600" />
             </div>
             <h2 className="text-xl font-bold mb-2">Acceso Denegado</h2>
-            <p className="text-gray-500 mb-4">Esta pagina es exclusiva para conductores registrados.</p>
+            <p className="text-gray-500 mb-4">Esta página es exclusiva para conductores registrados.</p>
             <Link href="/login">
-              <Button className="bg-[#1a5276]">Iniciar Sesion</Button>
+              <Button className="bg-[#1a5276]">Iniciar Sesión</Button>
             </Link>
           </CardContent>
         </Card>
@@ -442,7 +442,7 @@ export default function DriverDashboard() {
                       className="flex items-center gap-3 text-white/70 hover:text-white w-full"
                     >
                       <LogOut className="w-5 h-5" />
-                      Cerrar Sesion
+                      Cerrar Sesión
                     </button>
                   </nav>
                 </SheetContent>
@@ -544,7 +544,7 @@ export default function DriverDashboard() {
                       {driverInfo?.rating || "-"}
                     </span>
                   </div>
-                  <p className="text-xs lg:text-sm text-yellow-600">Calificacion</p>
+                  <p className="text-xs lg:text-sm text-yellow-600">Calificación</p>
                 </div>
                 
                 <div className="bg-green-50 rounded-lg p-3 lg:p-4 text-center">

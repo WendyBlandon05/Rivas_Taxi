@@ -226,7 +226,7 @@ export default function MyTripsPage() {
               <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
             </Link>
             <h1 className="text-3xl font-bold mt-4">Mis Viajes</h1>
-            <p className="text-blue-100 mt-1">Verificando tu sesion...</p>
+            <p className="text-blue-100 mt-1">Verificando tu sesión...</p>
           </div>
         </div>
 
@@ -305,7 +305,7 @@ export default function MyTripsPage() {
             <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
               <TabsTrigger value="upcoming" className="flex items-center gap-2">
                 <CalendarClock className="w-4 h-4" />
-                Proximos ({upcomingTrips.length})
+                Próximos ({upcomingTrips.length})
               </TabsTrigger>
               <TabsTrigger value="history" className="flex items-center gap-2">
                 <History className="w-4 h-4" />
@@ -322,7 +322,7 @@ export default function MyTripsPage() {
                       <CalendarClock className="w-10 h-10 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-700 mb-2">No tienes viajes programados</h3>
-                    <p className="text-gray-500 mb-6">Reserva tu proximo viaje</p>
+                    <p className="text-gray-500 mb-6">Reserva tu próximo viaje</p>
                     <Link href="/trips">
                       <Button className="bg-amber-500 hover:bg-amber-600 text-white">
                         <Plus className="w-4 h-4 mr-2" />
@@ -476,7 +476,7 @@ export default function MyTripsPage() {
                       <History className="w-10 h-10 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-700 mb-2">No tienes viajes anteriores</h3>
-                    <p className="text-gray-500">Tu historial de viajes aparecera aqui</p>
+                    <p className="text-gray-500">Tu historial de viajes aparecerá aquí</p>
                   </CardContent>
                 </Card>
               ) : (
@@ -556,7 +556,7 @@ export default function MyTripsPage() {
                                   <div className="mt-3">
                                     {getTripReview(trip) ? (
                                       <div className="rounded-lg bg-white border p-3">
-                                        <p className="text-xs text-gray-500 mb-1">Tu calificacion</p>
+                                        <p className="text-xs text-gray-500 mb-1">Tu calificación</p>
                                         <div className="flex items-center justify-center gap-1">
                                           {[1, 2, 3, 4, 5].map((star) => (
                                             <Star
@@ -575,7 +575,7 @@ export default function MyTripsPage() {
                                           className="mt-2 h-8 w-full text-[#1a5276] hover:bg-blue-50"
                                           onClick={() => setReviewTrip(trip)}
                                         >
-                                          Editar resena
+                                          Editar reseña
                                         </Button>
                                       </div>
                                     ) : (
@@ -616,7 +616,7 @@ export default function MyTripsPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertTriangle className="w-5 h-5" />
-              Cancelar reservacion
+              Cancelar reservación
             </DialogTitle>
             <DialogDescription>
               Selecciona el motivo de la cancelacion. Esto nos ayuda a analizar y mejorar el servicio.

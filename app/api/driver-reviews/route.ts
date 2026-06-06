@@ -63,14 +63,14 @@ export async function POST(request: Request) {
   const numericRating = Number(rating)
   if (!Number.isInteger(numericRating) || numericRating < 1 || numericRating > 5) {
     return NextResponse.json(
-      { error: "La calificacion debe estar entre 1 y 5" },
+      { error: "La calificación debe estar entre 1 y 5" },
       { status: 400 }
     )
   }
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return NextResponse.json({ error: "Debes iniciar sesion para calificar un viaje" }, { status: 401 })
+    return NextResponse.json({ error: "Debes iniciar sesión para calificar un viaje" }, { status: 401 })
   }
 
   const { data: trip, error: tripError } = await adminClient

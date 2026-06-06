@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       .single()
 
     return NextResponse.json({ 
-      message: "Inicio de sesion exitoso",
+      message: "Inicio de sesión exitoso",
       user: data.user,
       profile,
       session: data.session

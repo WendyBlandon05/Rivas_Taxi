@@ -43,7 +43,7 @@ export default function LoginPage() {
       
       if (signInError) {
         setError(signInError.message === "Invalid login credentials" 
-          ? "Credenciales invalidas. Verifica tu correo y contrasena."
+          ? "Credenciales inválidas. Verifica tu correo y contraseña."
           : signInError.message)
         setIsLoading(false)
         return
@@ -51,7 +51,7 @@ export default function LoginPage() {
       
       // The useEffect will handle redirect based on role
     } catch (err) {
-      setError("Error al iniciar sesion. Intenta de nuevo.")
+      setError("Error al iniciar sesión. Intenta de nuevo.")
       setIsLoading(false)
     }
   }
@@ -73,7 +73,7 @@ export default function LoginPage() {
         </div>
       )}
       <div className="space-y-2">
-        <Label htmlFor="email">Correo Electronico</Label>
+        <Label htmlFor="email">Correo Electrónico</Label>
         <div className="relative">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           <input
@@ -91,7 +91,7 @@ export default function LoginPage() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Contrasena</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           <input
@@ -122,7 +122,7 @@ export default function LoginPage() {
           <span className="text-sm text-gray-600">Recordarme</span>
         </label>
         <Link href="/forgot-password" className="text-sm text-[#1a5276] hover:underline">
-          Olvidaste tu contrasena?
+          ¿Olvidaste tu contraseña?
         </Link>
       </div>
 
@@ -131,7 +131,7 @@ export default function LoginPage() {
         className="w-full bg-[#1a5276] hover:bg-[#154360] text-white"
         disabled={isLoading}
       >
-        {isLoading ? "Iniciando sesion..." : "Iniciar Sesion"}
+        {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
       </Button>
     </form>
   )
@@ -158,7 +158,7 @@ export default function LoginPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-[#1a5276]">Bienvenido</CardTitle>
             <CardDescription>
-              Viaja seguro por la costa del pacifico.
+              Viaja seguro por la costa del Pacífico.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -166,9 +166,9 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <p className="text-center text-sm text-gray-600">
-              No tienes una cuenta?{" "}
+              ¿No tienes una cuenta?{" "}
               <Link href="/register" className="text-[#1a5276] font-semibold hover:underline">
-                Registrate aqui
+                Regístrate aquí
               </Link>
             </p>
           </CardFooter>

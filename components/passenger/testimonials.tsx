@@ -89,7 +89,7 @@ export function Testimonials() {
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(data.error || (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las resenas"))
+          throw new Error(data.error || (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las reseñas"))
         }
 
         const realReviews = (data.reviews || []).filter((review: ServiceReview) => (
@@ -99,7 +99,7 @@ export function Testimonials() {
         setReviews(realReviews)
         setCurrentIndex(0)
       } catch (err) {
-        setError(err instanceof Error ? err.message : (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las resenas"))
+        setError(err instanceof Error ? err.message : (language === "en" ? "Reviews could not be loaded" : "No se pudieron cargar las reseñas"))
       } finally {
         setIsLoading(false)
       }
@@ -155,12 +155,12 @@ export function Testimonials() {
           <div className="max-w-xl mx-auto rounded-lg border border-blue-100 bg-blue-50 p-8 text-center">
             <MessageSquare className="w-10 h-10 text-[#1a5276] mx-auto mb-3" />
             <h3 className="font-semibold text-[#1a5276] mb-2">
-              {language === "en" ? "No customer reviews published yet" : "Aun no hay resenas reales publicadas"}
+              {language === "en" ? "No customer reviews published yet" : "Aún no hay reseñas reales publicadas"}
             </h3>
             <p className="text-sm text-gray-600">
               {language === "en"
                 ? "When customers leave service reviews, they will appear here."
-                : "Cuando los usuarios dejen resenas del servicio, apareceran aqui."}
+                : "Cuando los usuarios dejen reseñas del servicio, aparecerán aquí."}
             </p>
           </div>
         ) : (
@@ -222,7 +222,7 @@ export function Testimonials() {
                     className={`w-2 h-2 rounded-full transition-colors ${
                       index === currentIndex ? "bg-[#1a5276]" : "bg-gray-300"
                     }`}
-                    aria-label={language === "en" ? `Go to review ${index + 1}` : `Ir a resena ${index + 1}`}
+                    aria-label={language === "en" ? `Go to review ${index + 1}` : `Ir a reseña ${index + 1}`}
                   />
                 ))}
               </div>

@@ -86,13 +86,13 @@ function buildInitialMessage(language: Language): Message {
     id: 1,
     text: language === "en"
       ? "Hi! I'm Kimi, the Pacific Coast Taxi virtual assistant. I can help you quote, book, see coupons or check your rides."
-      : "Hola! Soy Kimi, el asistente virtual de Pacific Coast Taxi. Puedo ayudarte a cotizar, reservar, ver cupones o consultar tus viajes.",
+      : "¡Hola! Soy Kimi, el asistente virtual de Pacific Coast Taxi. Puedo ayudarte a cotizar, reservar, ver cupones o consultar tus viajes.",
     isBot: true,
     timestamp: new Date(),
     actions: [
       { label: language === "en" ? "Book" : "Reservar", href: "/trips", icon: "reserve" },
       { label: language === "en" ? "Prices" : "Precios", prompt: language === "en" ? "I want prices" : "Quiero saber precios", icon: "route" },
-      { label: language === "en" ? "Coupons" : "Cupones", prompt: language === "en" ? "What coupons are available?" : "Que cupones hay?", icon: "coupon" },
+      { label: language === "en" ? "Coupons" : "Cupones", prompt: language === "en" ? "What coupons are available?" : "¿Qué cupones hay?", icon: "coupon" },
       { label: "WhatsApp", href: WHATSAPP_URL, icon: "phone" },
     ],
   }
@@ -142,7 +142,7 @@ function bookingActions(isLoggedIn: boolean, language: Language): QuickAction[] 
   }
 
   return [
-    { label: language === "en" ? "Log in" : "Iniciar sesion", href: "/login", icon: "login" },
+    { label: language === "en" ? "Log in" : "Iniciar sesión", href: "/login", icon: "login" },
     { label: language === "en" ? "Sign up" : "Registrarme", href: "/register?reason=booking", icon: "reserve" },
   ]
 }
@@ -185,7 +185,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? `Hi! ${isLoggedIn ? "You are already logged in." : "To book, please log in or sign up for safety."}\n\nI can help with prices, destinations, coupons, bookings and WhatsApp contact.`
-        : `Hola! ${isLoggedIn ? "Ya tienes sesion iniciada." : "Para reservar debes iniciar sesion o registrarte por seguridad."}\n\nPuedo ayudarte con precios, destinos, cupones, reservas y contacto por WhatsApp.`,
+        : `¡Hola! ${isLoggedIn ? "Ya tienes sesión iniciada." : "Para reservar debes iniciar sesión o registrarte por seguridad."}\n\nPuedo ayudarte con precios, destinos, cupones, reservas y contacto por WhatsApp.`,
       actions: [
         { label: isEnglish ? "Book" : "Reservar", href: "/trips", icon: "reserve" },
         { label: isEnglish ? "Prices" : "Precios", prompt: isEnglish ? "I want prices" : "Quiero saber precios", icon: "route" },
@@ -201,8 +201,8 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
           ? "You can book from the ride center. The system will ask for pickup, destination, date from tomorrow onward, time and number of passengers."
           : "For your safety, please log in or sign up before booking. That keeps your ride associated with your account."
         : isLoggedIn
-        ? "Puedes reservar desde el centro de viajes. El sistema te pedira origen, destino, fecha desde manana, hora y cantidad de pasajeros."
-        : "Para tu seguridad, antes de reservar debes iniciar sesion o registrarte. Asi tu viaje queda asociado a tu cuenta.",
+        ? "Puedes reservar desde el centro de viajes. El sistema te pedirá origen, destino, fecha desde mañana, hora y cantidad de pasajeros."
+        : "Para tu seguridad, antes de reservar debes iniciar sesión o registrarte. Así tu viaje queda asociado a tu cuenta.",
       actions: bookingActions(isLoggedIn, language),
     }
   }
@@ -211,7 +211,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? "We cover Rivas and main destinations:\n\n- San Juan del Sur\n- Playa Maderas\n- Playa Gigante\n- Tola\n- Granada\n- Managua\n- International Airport\n\nYou can also choose exact pickup and destination on the map."
-        : "Cubrimos Rivas y destinos principales:\n\n- San Juan del Sur\n- Playa Maderas\n- Playa Gigante\n- Tola\n- Granada\n- Managua\n- Aeropuerto Internacional\n\nTambien puedes escoger origen y destino exactos en el mapa.",
+        : "Cubrimos Rivas y destinos principales:\n\n- San Juan del Sur\n- Playa Maderas\n- Playa Gigante\n- Tola\n- Granada\n- Managua\n- Aeropuerto Internacional\n\nTambién puedes escoger origen y destino exactos en el mapa.",
       actions: [
         { label: isEnglish ? "Open form" : "Ver formulario", href: "/trips", icon: "reserve" },
         { label: isEnglish ? "Ask price" : "Pedir precio", prompt: isEnglish ? "How much from Rivas to Playa Maderas?" : "Cuanto cuesta de Rivas a Playa Maderas?", icon: "route" },
@@ -224,7 +224,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
       text: isEnglish
         ? "Available coupons to try in the form:\n\n- BIENVENIDO20: first ride only\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nThe discount is calculated before confirming the booking."
         : "Cupones disponibles para probar en el formulario:\n\n- BIENVENIDO20: solo primer viaje\n- PACIFIC15\n- VERANO20\n- TURISTA10\n- AEROPUERTO15\n\nEl descuento se calcula antes de confirmar la reserva.",
-      actions: [{ label: isEnglish ? "Book with coupon" : "Reservar con cupon", href: "/trips", icon: "coupon" }],
+      actions: [{ label: isEnglish ? "Book with coupon" : "Reservar con cupón", href: "/trips", icon: "coupon" }],
     }
   }
 
@@ -232,10 +232,10 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isLoggedIn
         ? isEnglish ? "You can see your rides, statuses and details in My Trips." : "Puedes ver tus viajes, estados y detalles en la seccion Mis viajes."
-        : isEnglish ? "To check your rides, log in with the email used to book." : "Para consultar tus viajes debes iniciar sesion con el correo usado al reservar.",
+        : isEnglish ? "To check your rides, log in with the email used to book." : "Para consultar tus viajes debes iniciar sesión con el correo usado al reservar.",
       actions: isLoggedIn
         ? [{ label: isEnglish ? "View my trips" : "Ver mis viajes", href: "/my-trips", icon: "trips" }]
-        : [{ label: isEnglish ? "Log in" : "Iniciar sesion", href: "/login", icon: "login" }],
+        : [{ label: isEnglish ? "Log in" : "Iniciar sesión", href: "/login", icon: "login" }],
     }
   }
 
@@ -252,7 +252,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? "Your safety is a priority. That is why bookings require login, drivers are registered by the administrator, and your ride history stays in your account."
-        : "Tu seguridad es prioridad. Por eso pedimos iniciar sesion para reservar, asignamos conductores registrados por el administrador y guardamos el historial del viaje en tu cuenta.",
+        : "Tu seguridad es prioridad. Por eso pedimos iniciar sesión para reservar, asignamos conductores registrados por el administrador y guardamos el historial del viaje en tu cuenta.",
       actions: bookingActions(isLoggedIn, language),
     }
   }
@@ -261,7 +261,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? "You can contact us by WhatsApp or phone:\n\n+505 7750-2626\n\nI can also help you here with prices, destinations and bookings."
-        : "Puedes contactarnos por WhatsApp o telefono:\n\n+505 7750-2626\n\nTambien puedo ayudarte aqui con precios, destinos y reservas.",
+        : "Puedes contactarnos por WhatsApp o teléfono:\n\n+505 7750-2626\n\nTambién puedo ayudarte aquí con precios, destinos y reservas.",
       actions: [{ label: isEnglish ? "Open WhatsApp" : "Abrir WhatsApp", href: WHATSAPP_URL, icon: "phone" }],
     }
   }
@@ -270,7 +270,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
     return {
       text: isEnglish
         ? "You are welcome! I am here whenever you need to quote or book a ride."
-        : "De nada! Estoy aqui para ayudarte cuando necesites cotizar o reservar un viaje.",
+        : "¡De nada! Estoy aquí para ayudarte cuando necesites cotizar o reservar un viaje.",
       actions: [{ label: isEnglish ? "Book" : "Reservar", href: "/trips", icon: "reserve" }],
     }
   }
@@ -278,7 +278,7 @@ function getBotResponse(message: string, isLoggedIn: boolean, language: Language
   return {
     text: isEnglish
       ? "I can help with quotes, destinations, coupons, bookings, your trips or WhatsApp contact.\n\nTry asking: \"How much from Rivas to San Juan del Sur?\""
-      : "Puedo ayudarte con cotizaciones, destinos, cupones, reservas, tus viajes o contacto por WhatsApp.\n\nPrueba preguntando: \"Cuanto cuesta de Rivas a San Juan del Sur?\"",
+      : "Puedo ayudarte con cotizaciones, destinos, cupones, reservas, tus viajes o contacto por WhatsApp.\n\nPrueba preguntando: \"¿Cuánto cuesta de Rivas a San Juan del Sur?\"",
     actions: [
       { label: isEnglish ? "Prices" : "Precios", prompt: isEnglish ? "I want prices" : "Quiero saber precios", icon: "route" },
       { label: isEnglish ? "Book" : "Reservar", href: "/trips", icon: "reserve" },
@@ -465,7 +465,7 @@ export function ChatBot() {
               { label: language === "en" ? "Prices" : "Precios", prompt: language === "en" ? "I want prices" : "Quiero saber precios" },
               { label: language === "en" ? "Destinations" : "Destinos", prompt: language === "en" ? "What destinations do you cover?" : "Que destinos cubren?" },
               { label: language === "en" ? "Book" : "Reservar", prompt: language === "en" ? "I want to book" : "Quiero reservar" },
-              { label: language === "en" ? "Coupons" : "Cupones", prompt: language === "en" ? "What coupons are available?" : "Que cupones hay?" },
+              { label: language === "en" ? "Coupons" : "Cupones", prompt: language === "en" ? "What coupons are available?" : "¿Qué cupones hay?" },
               { label: language === "en" ? "Contact" : "Contacto", prompt: language === "en" ? "I need WhatsApp contact" : "Necesito contacto por WhatsApp" },
             ].map((action) => (
               <button

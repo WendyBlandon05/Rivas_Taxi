@@ -441,7 +441,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertTriangle className="w-5 h-5" />
-              Cancelar reservacion
+              Cancelar reservación
             </DialogTitle>
             <DialogDescription>
               Selecciona el motivo de la cancelacion. Esto nos ayuda a analizar y mejorar el servicio.

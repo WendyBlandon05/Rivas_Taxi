@@ -12,7 +12,7 @@ async function getDriverUser() {
   const { data: { user }, error: userError } = await supabase.auth.getUser()
 
   if (userError || !user) {
-    return { supabase, user: null, error: NextResponse.json({ error: "Debes iniciar sesion" }, { status: 401 }) }
+    return { supabase, user: null, error: NextResponse.json({ error: "Debes iniciar sesión" }, { status: 401 }) }
   }
 
   const { data: profile, error: profileError } = await supabase

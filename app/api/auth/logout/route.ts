@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
     await supabase.auth.signOut()
-    const response = NextResponse.json({ message: "Sesion cerrada exitosamente" })
+    const response = NextResponse.json({ message: "Sesión cerrada exitosamente" })
 
     request.cookies.getAll().forEach((cookie) => {
       if (cookie.name.startsWith("sb-")) {

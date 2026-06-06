@@ -37,7 +37,7 @@ const faqs = [
     id: "4",
     question: { es: "PUEDEN RECOGERME EN HOTELES, TERMINALES O AEROPUERTOS?", en: "CAN YOU PICK ME UP AT HOTELS, TERMINALS OR AIRPORTS?" },
     answer: {
-      es: "Por supuesto, ofrecemos servicio de recogida en hoteles, terminales de buses, aeropuertos y cualquier ubicacion acordada dentro de nuestra area de cobertura.",
+      es: "Por supuesto, ofrecemos servicio de recogida en hoteles, terminales de buses, aeropuertos y cualquier ubicación acordada dentro de nuestra área de cobertura.",
       en: "Of course. We offer pickup from hotels, bus terminals, airports and any agreed location within our coverage area.",
     },
   },

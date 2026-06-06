@@ -24,7 +24,7 @@ const clientImages = [
 const values = [
   { icon: Shield, title: { es: "Seguridad", en: "Safety" }, description: { es: "Tu bienestar es nuestra prioridad. Conductores verificados y vehiculos en optimas condiciones.", en: "Your well-being is our priority. Verified drivers and vehicles in excellent condition." } },
   { icon: Clock, title: { es: "Puntualidad", en: "Punctuality" }, description: { es: "Respetamos tu tiempo. Llegamos siempre a la hora acordada para que disfrutes al maximo.", en: "We respect your time. We arrive at the agreed time so you can enjoy every moment." } },
-  { icon: Heart, title: { es: "Pasion", en: "Passion" }, description: { es: "Amamos Nicaragua y queremos compartir su belleza contigo. Cada viaje es una experiencia unica.", en: "We love Nicaragua and want to share its beauty with you. Every ride is a unique experience." } },
+  { icon: Heart, title: { es: "Pasión", en: "Passion" }, description: { es: "Amamos Nicaragua y queremos compartir su belleza contigo. Cada viaje es una experiencia única.", en: "We love Nicaragua and want to share its beauty with you. Every ride is a unique experience." } },
   { icon: Users, title: { es: "Servicio Personalizado", en: "Personalized Service" }, description: { es: "Nos adaptamos a tus necesidades. Tours a tu medida para grupos, familias o viajeros solos.", en: "We adapt to your needs with custom rides for groups, families or solo travelers." } },
 ]
 
@@ -89,7 +89,7 @@ export default function AboutPage() {
               <p className="text-xl text-white/90 leading-relaxed">
                 {language === "en"
                   ? "We are a Nicaraguan company born in Rivas, dedicated to helping travelers discover the Pacific coast."
-                  : "Somos una empresa nicaraguense nacida en Rivas, dedicada a mostrar las maravillas del Pacifico a viajeros de todo el mundo."}
+                  : "Somos una empresa nicaragüense nacida en Rivas, dedicada a mostrar las maravillas del Pacífico a viajeros de todo el mundo."}
               </p>
             </div>
           </div>
@@ -113,8 +113,8 @@ export default function AboutPage() {
                   </>
                 ) : (
                   <>
-                    <p><span className="font-semibold text-[#1a5276]">Pacific Coast Taxi</span> nacio en 2025 en el corazon de Rivas, Nicaragua, con un sueno claro: ofrecer a los viajeros extranjeros una forma segura, comoda y autentica de explorar las joyas del Pacifico nicaraguense.</p>
-                    <p>Desde nuestros inicios, nos hemos dedicado a crear experiencias memorables para mochileros, familias y aventureros que llegan a nuestras costas buscando playas paradisiacas, cultura vibrante y la calidez de nuestra gente.</p>
+                    <p><span className="font-semibold text-[#1a5276]">Pacific Coast Taxi</span> nació en 2025 en el corazón de Rivas, Nicaragua, con un sueño claro: ofrecer a los viajeros extranjeros una forma segura, cómoda y auténtica de explorar las joyas del Pacífico nicaragüense.</p>
+                    <p>Desde nuestros inicios, nos hemos dedicado a crear experiencias memorables para mochileros, familias y aventureros que llegan a nuestras costas buscando playas paradisíacas, cultura vibrante y la calidez de nuestra gente.</p>
                     <p>Hoy, somos mas que un servicio de transporte. Somos embajadores de nuestra tierra, guias apasionados que conocen cada rincon de San Juan del Sur, Playa Maderas, Playa Gigante y todos los destinos que hacen de Rivas un lugar magico.</p>
                   </>
                 )}
@@ -228,7 +228,7 @@ export default function AboutPage() {
             <p className="text-gray-600 max-w-2xl mx-auto">
               {language === "en"
                 ? "We know the beaches, sunsets and roads of Nicaragua's Pacific coast. Let us take you there."
-                : "Conocemos cada playa, cada atardecer y cada camino del Pacifico nicaraguense. Dejanos llevarte a descubrirlos."}
+                : "Conocemos cada playa, cada atardecer y cada camino del Pacífico nicaragüense. Déjanos llevarte a descubrirlos."}
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -265,7 +265,7 @@ export default function AboutPage() {
           <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
             {language === "en"
               ? "Whether you are looking for waves, unforgettable sunsets or a better way to explore Nicaragua, we are here to take you."
-              : "Ya sea que busques las mejores olas, atardeceres inolvidables o simplemente explorar Nicaragua, estamos aqui para llevarte."}
+              : "Ya sea que busques las mejores olas, atardeceres inolvidables o simplemente explorar Nicaragua, estamos aquí para llevarte."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/trips">

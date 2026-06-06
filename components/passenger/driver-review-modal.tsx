@@ -70,7 +70,7 @@ export function DriverReviewModal({
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Error al enviar la resena")
+        throw new Error(data.error || "Error al enviar la reseña")
       }
 
       setSuccess(true)
@@ -78,7 +78,7 @@ export function DriverReviewModal({
         onSuccess()
       }, 1500)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al enviar la resena")
+      setError(err instanceof Error ? err.message : "Error al enviar la reseña")
     } finally {
       setIsSubmitting(false)
     }
@@ -129,10 +129,10 @@ export function DriverReviewModal({
               <Star className="w-8 h-8 text-green-600 fill-green-600" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              Gracias por tu resena!
+              ¡Gracias por tu reseña!
             </h3>
             <p className="text-gray-600">
-              Tu calificacion ayuda a mejorar nuestro servicio.
+              Tu calificación ayuda a mejorar nuestro servicio.
             </p>
           </div>
         </DialogContent>
@@ -146,7 +146,7 @@ export function DriverReviewModal({
         <DialogHeader>
           <DialogTitle className="text-center">Calificar Conductor</DialogTitle>
           <DialogDescription className="text-center">
-            Como fue tu experiencia con este conductor?
+            ¿Cómo fue tu experiencia con este conductor?
           </DialogDescription>
         </DialogHeader>
 
@@ -170,7 +170,7 @@ export function DriverReviewModal({
           {/* Rating Stars */}
           <div className="text-center">
             <Label className="text-sm text-gray-600 mb-3 block">
-              Tu calificacion
+              Tu calificación
             </Label>
             {renderStars()}
             <p className="mt-2 text-lg font-medium text-[#1a5276]">
@@ -185,7 +185,7 @@ export function DriverReviewModal({
             </Label>
             <Textarea
               id="comment"
-              placeholder="Cuentanos mas sobre tu experiencia..."
+              placeholder="Cuéntanos más sobre tu experiencia..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="mt-2"
@@ -220,7 +220,7 @@ export function DriverReviewModal({
                   Enviando...
                 </>
               ) : (
-                "Enviar Resena"
+                "Enviar Reseña"
               )}
             </Button>
           </div>

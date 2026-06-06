@@ -146,7 +146,7 @@ export async function PATCH(
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      return NextResponse.json({ error: "Debes iniciar sesion" }, { status: 401 })
+      return NextResponse.json({ error: "Debes iniciar sesión" }, { status: 401 })
     }
 
     if (updates.action === "driver_cancel") {

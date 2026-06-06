@@ -27,12 +27,12 @@ export default function ForgotPasswordPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "No pudimos enviar el correo de recuperacion")
+        throw new Error(data.error || "No pudimos enviar el correo de recuperación")
       }
 
       setSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No pudimos enviar el correo de recuperacion")
+      setError(err instanceof Error ? err.message : "No pudimos enviar el correo de recuperación")
     } finally {
       setIsLoading(false)
     }
@@ -61,9 +61,9 @@ export default function ForgotPasswordPage() {
 
         <Card className="shadow-2xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-[#1a5276]">Recuperar contrasena</CardTitle>
+            <CardTitle className="text-2xl text-[#1a5276]">Recuperar contraseña</CardTitle>
             <CardDescription>
-              Escribe tu correo y te enviaremos un enlace para crear una nueva contrasena.
+              Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
                   <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold">Revisa tu correo</p>
-                    <p>Si existe una cuenta con ese email, recibiras un enlace para restablecer tu contrasena.</p>
+                    <p>Si existe una cuenta con ese email, recibirás un enlace para restablecer tu contraseña.</p>
                   </div>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Correo Electronico</Label>
+                  <Label htmlFor="email">Correo Electrónico</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
           <CardFooter>
             <Link href="/login" className="mx-auto inline-flex items-center gap-2 text-sm text-[#1a5276] hover:underline">
               <ArrowLeft className="w-4 h-4" />
-              Volver al inicio de sesion
+              Volver al inicio de sesión
             </Link>
           </CardFooter>
         </Card>

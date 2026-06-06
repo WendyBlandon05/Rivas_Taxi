@@ -44,17 +44,17 @@ export default function RegisterPage() {
     setError("")
     
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contrasenas no coinciden")
+      setError("Las contraseñas no coinciden")
       return
     }
     
     if (formData.password.length < 6) {
-      setError("La contrasena debe tener al menos 6 caracteres")
+      setError("La contraseña debe tener al menos 6 caracteres")
       return
     }
     
     if (!acceptedTerms) {
-      setError("Debes aceptar los terminos y condiciones")
+      setError("Debes aceptar los términos y condiciones")
       return
     }
     
@@ -108,7 +108,7 @@ export default function RegisterPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-[#1a5276]">Crear Cuenta</CardTitle>
             <CardDescription>
-              Registrate para comenzar a usar Pacific Coast Taxi
+              Regístrate para comenzar a usar Pacific Coast Taxi
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -121,16 +121,16 @@ export default function RegisterPage() {
 
               {registrationReason === "booking" && !success && (
                 <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm">
-                  Para tu mayor seguridad debes registrarte antes de reservar un viaje. Asi podremos asociar la reserva a tu cuenta y darte seguimiento.
+                  Para tu mayor seguridad debes registrarte antes de reservar un viaje. Así podremos asociar la reserva a tu cuenta y darte seguimiento.
                 </div>
               )}
               
               {success && (
                 <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
                   <p className="font-semibold">Cuenta creada exitosamente!</p>
-                  <p>Por favor revisa tu correo electronico para verificar tu cuenta.</p>
+                  <p>Por favor revisa tu correo electrónico para verificar tu cuenta.</p>
                   <Link href="/login" className="text-green-800 underline mt-2 inline-block">
-                    Ir a iniciar sesion
+                    Ir a iniciar sesión
                   </Link>
                 </div>
               )}
@@ -163,7 +163,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Correo Electronico</Label>
+                <Label htmlFor="email">Correo Electrónico</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
@@ -179,7 +179,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefono</Label>
+                <Label htmlFor="phone">Teléfono</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
@@ -195,7 +195,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Ubicacion</Label>
+                <Label htmlFor="location">Ubicación</Label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
@@ -209,7 +209,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contrasena</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
@@ -232,7 +232,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirmar Contrasena</Label>
+                <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
@@ -263,11 +263,11 @@ export default function RegisterPage() {
                 <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
                   Acepto los{" "}
                   <Link href="/terms" className="text-[#1a5276] hover:underline">
-                    terminos y condiciones
+                    términos y condiciones
                   </Link>{" "}
                   y la{" "}
                   <Link href="/privacy" className="text-[#1a5276] hover:underline">
-                    politica de privacidad
+                    política de privacidad
                   </Link>
                 </label>
               </div>
@@ -285,7 +285,7 @@ export default function RegisterPage() {
             <p className="text-center text-sm text-gray-600">
               Ya tienes una cuenta?{" "}
               <Link href="/login" className="text-[#1a5276] font-semibold hover:underline">
-                Inicia sesion aqui
+                Inicia sesión aquí
               </Link>
             </p>
           </CardFooter>

@@ -72,13 +72,13 @@ export function PromotionsPopup() {
               En tu primer viaje con Pacific Coast Taxi
             </p>
             <div className="bg-amber-100 rounded-lg p-4 my-4">
-              <p className="text-sm text-gray-600 mb-1">Usa el codigo:</p>
+              <p className="text-sm text-gray-600 mb-1">Usa el código:</p>
               <p className="text-2xl font-bold text-[#1a5276] tracking-wider">
                 BIENVENIDO20
               </p>
             </div>
             <p className="text-xs text-gray-500 mb-4">
-              Valido para viajes dentro de Rivas. Promocion por tiempo limitado.
+              Válido para viajes dentro de Rivas. Promoción por tiempo limitado.
             </p>
             
             <div className="flex flex-col gap-2">

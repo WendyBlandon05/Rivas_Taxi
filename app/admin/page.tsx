@@ -235,7 +235,7 @@ export default function AdminDashboard() {
       router.replace("/login")
       router.refresh()
     } catch (error) {
-      toast.error("No se pudo cerrar sesion. Intenta de nuevo.")
+      toast.error("No se pudo cerrar sesión. Intenta de nuevo.")
       setIsSigningOut(false)
     }
   }
@@ -399,7 +399,7 @@ export default function AdminDashboard() {
     e.preventDefault()
 
     if (!isValidNicaraguaPhone(newDriverPhone)) {
-      toast.error("El telefono debe iniciar con +505 y tener 8 numeros despues.")
+      toast.error("El teléfono debe iniciar con +505 y tener 8 números después.")
       return
     }
 
@@ -496,7 +496,7 @@ export default function AdminDashboard() {
     if (!editingDriver) return
 
     if (!isValidNicaraguaPhone(editingDriver.phone)) {
-      toast.error("El telefono debe iniciar con +505 y tener 8 numeros despues.")
+      toast.error("El teléfono debe iniciar con +505 y tener 8 números después.")
       return
     }
 
@@ -690,7 +690,7 @@ export default function AdminDashboard() {
           disabled={isSigningOut}
         >
           <LogOut className="w-4 h-4 mr-2" />
-          {isSigningOut ? "Cerrando..." : "Cerrar Sesion"}
+          {isSigningOut ? "Cerrando..." : "Cerrar Sesión"}
         </Button>
       </div>
     </>
@@ -802,7 +802,7 @@ export default function AdminDashboard() {
                   <CardContent className="p-4 lg:p-6">
                     <div className="flex items-center justify-between">
                       <div className="min-w-0">
-                        <p className="text-xs lg:text-sm text-gray-500 truncate">Calificacion</p>
+                        <p className="text-xs lg:text-sm text-gray-500 truncate">Calificación</p>
                         <p className="text-xl lg:text-3xl font-bold text-[#1a5276]">{stats.avgRating || "-"}</p>
                         <p className="text-xs text-gray-500">promedio</p>
                       </div>
@@ -1115,7 +1115,7 @@ export default function AdminDashboard() {
                           <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                             <div className="space-y-3">
                               <div>
-                                <Label className="text-xs text-gray-500">Correo electronico</Label>
+                                <Label className="text-xs text-gray-500">Correo electrónico</Label>
                                 <p className="font-mono text-sm">{driverCreated.email}</p>
                               </div>
                               <div>
@@ -1160,7 +1160,7 @@ export default function AdminDashboard() {
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                           <div className="space-y-2">
-                            <Label htmlFor="email">Correo electronico *</Label>
+                            <Label htmlFor="email">Correo electrónico *</Label>
                             <Input
                               id="email"
                               type="email"
@@ -1181,7 +1181,7 @@ export default function AdminDashboard() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="phone">Telefono</Label>
+                            <Label htmlFor="phone">Teléfono</Label>
                             <Input
                               id="phone"
                               type="tel"
@@ -1193,7 +1193,7 @@ export default function AdminDashboard() {
                               pattern="\+505[0-9]{8}"
                               required
                             />
-                            <p className="text-xs text-gray-500">Formato: +505 seguido de 8 numeros.</p>
+                            <p className="text-xs text-gray-500">Formato: +505 seguido de 8 números.</p>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="driverPhoto">Foto del conductor</Label>
@@ -1219,7 +1219,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                              <Label htmlFor="cedula">Numero de cedula *</Label>
+                              <Label htmlFor="cedula">Número de cédula *</Label>
                               <Input
                                 id="cedula"
                                 placeholder="001-000000-0000A"
@@ -1232,7 +1232,7 @@ export default function AdminDashboard() {
                               <p className="text-xs text-gray-500">Formato: 111-111111-1111A.</p>
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="address">Direccion *</Label>
+                              <Label htmlFor="address">Dirección *</Label>
                               <Input
                                 id="address"
                                 placeholder="Rivas, Nicaragua"
@@ -1329,7 +1329,7 @@ export default function AdminDashboard() {
                               </Button>
                             </div>
                             <p className="text-xs text-gray-500">
-                              Guarda esta contraseña, el conductor la necesitara para iniciar sesion.
+                              Guarda esta contraseña, el conductor la necesitará para iniciar sesión.
                             </p>
                           </div>
                         </div>
@@ -1472,7 +1472,7 @@ export default function AdminDashboard() {
                   <div className="space-y-4 py-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label>Correo electronico</Label>
+                        <Label>Correo electrónico</Label>
                         <Input
                           type="email"
                           value={editingDriver.email}
@@ -1491,7 +1491,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label>Telefono</Label>
+                        <Label>Teléfono</Label>
                         <Input
                           value={editingDriver.phone}
                           onChange={(e) => setEditingDriver({ ...editingDriver, phone: formatNicaraguaPhone(e.target.value) })}
@@ -1500,7 +1500,7 @@ export default function AdminDashboard() {
                           pattern="\+505[0-9]{8}"
                           required
                         />
-                        <p className="text-xs text-gray-500">Formato: +505 seguido de 8 numeros.</p>
+                        <p className="text-xs text-gray-500">Formato: +505 seguido de 8 números.</p>
                       </div>
                       <div className="space-y-2">
                         <Label>Cedula</Label>
@@ -1515,7 +1515,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label>Direccion</Label>
+                      <Label>Dirección</Label>
                       <Input
                         value={editingDriver.address}
                         onChange={(e) => setEditingDriver({ ...editingDriver, address: e.target.value })}

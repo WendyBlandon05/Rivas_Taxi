@@ -8,12 +8,12 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Pacific Coast Taxi - Viaja Seguro por Nicaragua',
-  description: 'Servicio de taxi turistico en Rivas, Nicaragua. Viajes seguros a San Juan del Sur, playas del Pacifico y destinos turisticos. Reservas rapidas y conductores confiables.',
-  keywords: ['taxi', 'nicaragua', 'rivas', 'san juan del sur', 'transporte turistico', 'viajes', 'playas'],
+  description: 'Servicio de taxi turístico en Rivas, Nicaragua. Viajes seguros a San Juan del Sur, playas del Pacífico y destinos turísticos. Reservas rápidas y conductores confiables.',
+  keywords: ['taxi', 'nicaragua', 'rivas', 'san juan del sur', 'transporte turístico', 'viajes', 'playas'],
   authors: [{ name: 'Pacific Coast Taxi' }],
   openGraph: {
     title: 'Pacific Coast Taxi - Viaja Seguro por Nicaragua',
-    description: 'Servicio de taxi turistico en Rivas, Nicaragua. Reservas rapidas y conductores confiables.',
+    description: 'Servicio de taxi turístico en Rivas, Nicaragua. Reservas rápidas y conductores confiables.',
     type: 'website',
     locale: 'es_NI',
   },

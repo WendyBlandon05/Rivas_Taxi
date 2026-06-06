@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     const comment = typeof reviewData.comment === "string" ? reviewData.comment.trim() : ""
 
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-      return NextResponse.json({ error: "La calificacion debe estar entre 1 y 5" }, { status: 400 })
+      return NextResponse.json({ error: "La calificación debe estar entre 1 y 5" }, { status: 400 })
     }
 
     if (!comment) {
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
     if (error) {
       if (error.message?.includes("public.reviews") || error.message?.includes("schema cache")) {
         return NextResponse.json(
-          { error: "La tabla de resenas aun no existe. Ejecuta el script 008 en Supabase." },
+          { error: "La tabla de reseñas aún no existe. Ejecuta el script 008 en Supabase." },
           { status: 400 }
         )
       }

@@ -32,7 +32,7 @@ export function DriverReviewForm({
 
   const handleSubmit = async () => {
     if (rating < 1) {
-      setError("Por favor selecciona una calificacion")
+      setError("Por favor selecciona una calificación")
       return
     }
 
@@ -60,7 +60,7 @@ export function DriverReviewForm({
       onSuccess?.()
       onClose()
     } catch (err) {
-      setError("Error al enviar la resena. Intenta de nuevo.")
+      setError("Error al enviar la reseña. Intenta de nuevo.")
     }
 
     setIsSubmitting(false)
@@ -74,7 +74,7 @@ export function DriverReviewForm({
         <DialogHeader>
           <DialogTitle className="text-[#1a5276]">Calificar a {driverName}</DialogTitle>
           <DialogDescription>
-            Tu opinion nos ayuda a mejorar el servicio
+            Tu opinión nos ayuda a mejorar el servicio
           </DialogDescription>
         </DialogHeader>
 
@@ -87,7 +87,7 @@ export function DriverReviewForm({
 
           {/* Star Rating */}
           <div className="text-center">
-            <p className="text-sm text-gray-600 mb-2">Selecciona tu calificacion</p>
+            <p className="text-sm text-gray-600 mb-2">Selecciona tu calificación</p>
             <div className="flex justify-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -123,7 +123,7 @@ export function DriverReviewForm({
               Comentario (opcional)
             </label>
             <Textarea
-              placeholder="Cuentanos sobre tu experiencia con el conductor..."
+              placeholder="Cuéntanos sobre tu experiencia con el conductor..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={4}
@@ -142,7 +142,7 @@ export function DriverReviewForm({
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                Enviar Resena
+                Enviar Reseña
               </>
             )}
           </Button>

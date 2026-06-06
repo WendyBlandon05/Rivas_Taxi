@@ -200,12 +200,12 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
         setCouponDiscount(discountPercentage)
         setCouponError("")
       } else {
-        setCouponError(data.error || "Cupon invalido o expirado")
+        setCouponError(data.error || "Cupón inválido o expirado")
         setCouponApplied(null)
         setCouponDiscount(0)
       }
     } catch (error) {
-      setCouponError("Error al validar el cupon")
+      setCouponError("Error al validar el cupón")
     } finally {
       setValidatingCoupon(false)
     }
@@ -222,24 +222,24 @@ export function TripBookingForm({ onBook }: TripBookingFormProps) {
     e.preventDefault()
 
     if (authLoading) {
-      setSubmitError("Estamos verificando tu sesion. Intenta de nuevo en un momento.")
+      setSubmitError("Estamos verificando tu sesión. Intenta de nuevo en un momento.")
       return
     }
 
     if (!user) {
-      setSubmitError("Para tu mayor seguridad debes registrarte o iniciar sesion antes de reservar un viaje.")
+      setSubmitError("Para tu mayor seguridad debes registrarte o iniciar sesión antes de reservar un viaje.")
       router.push("/register?reason=booking")
       return
     }
     
     // Validate all required fields
     if (!nameValid) {
-      setSubmitError("Por favor ingresa un nombre valido (nombre y apellido, solo letras)")
+      setSubmitError("Por favor ingresa un nombre válido (nombre y apellido, solo letras)")
       return
     }
     
     if (!phoneValid) {
-      setSubmitError("Por favor ingresa un numero de telefono valido con el codigo de pais correcto")
+      setSubmitError("Por favor ingresa un número de teléfono válido con el código de país correcto")
       return
     }
     

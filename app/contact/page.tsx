@@ -161,7 +161,7 @@ export default function ContactPage() {
                   <div className="w-14 h-14 bg-[#1a5276] rounded-full flex items-center justify-center mx-auto mb-3">
                     <MapPin className="w-7 h-7 text-amber-400" />
                   </div>
-                  <p className="text-white font-semibold">{language === "en" ? "Location" : "Ubicacion"}</p>
+                  <p className="text-white font-semibold">{language === "en" ? "Location" : "Ubicación"}</p>
                   <p className="text-gray-400 text-sm">Rivas, Nicaragua</p>
                 </div>
               </div>
