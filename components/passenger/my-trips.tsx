@@ -100,8 +100,8 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
 
 const CANCELLATION_REASONS = [
   { id: "plans_changed", label: "Mis planes cambiaron" },
-  { id: "found_alternative", label: "Encontre otra alternativa de transporte" },
-  { id: "wrong_details", label: "Ingrese datos incorrectos" },
+  { id: "found_alternative", label: "Encontré otra alternativa de transporte" },
+  { id: "wrong_details", label: "Ingresé datos incorrectos" },
   { id: "price_too_high", label: "El precio es muy alto" },
   { id: "emergency", label: "Tengo una emergencia" },
   { id: "other", label: "Otro motivo" }
@@ -176,7 +176,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
       : CANCELLATION_REASONS.find((item) => item.id === cancelReason)?.label || "Cancelado por el pasajero"
 
     if (cancelReason === "other" && reason.length < 8) {
-      setError("Describe el motivo de cancelacion con un poco mas de detalle.")
+      setError("Describe el motivo de cancelación con un poco más de detalle.")
       return
     }
 
@@ -444,7 +444,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
               Cancelar reservación
             </DialogTitle>
             <DialogDescription>
-              Selecciona el motivo de la cancelacion. Esto nos ayuda a analizar y mejorar el servicio.
+              Selecciona el motivo de la cancelación. Esto nos ayuda a analizar y mejorar el servicio.
             </DialogDescription>
           </DialogHeader>
 
@@ -470,7 +470,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
           </div>
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-            <strong>Nota:</strong> El motivo quedara guardado para revisar por que se cancelan los viajes.
+            <strong>Nota:</strong> El motivo quedará guardado para revisar por qué se cancelan los viajes.
           </div>
 
           <DialogFooter className="gap-2">
@@ -490,7 +490,7 @@ export function MyTrips({ onNewTrip }: MyTripsProps) {
               onClick={handleCancelTripWithReason}
               disabled={!cancelReason || !!cancellingId}
             >
-              {cancellingId ? "Cancelando..." : "Confirmar cancelacion"}
+              {cancellingId ? "Cancelando..." : "Confirmar cancelación"}
             </Button>
           </DialogFooter>
         </DialogContent>

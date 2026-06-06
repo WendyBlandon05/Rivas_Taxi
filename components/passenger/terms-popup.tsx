@@ -68,9 +68,9 @@ export function TermsPopup() {
 
             <h4 className="font-semibold text-[#1a5276]">3. Cancelaciones</h4>
             <p>
-              Las cancelaciones deben realizarse con al menos 2 horas de anticipacion para 
+              Las cancelaciones deben realizarse con al menos 2 horas de anticipación para 
               viajes locales y 24 horas para viajes interdepartamentales. Cancelaciones 
-              tardias pueden incurrir en cargos.
+              tardías pueden incurrir en cargos.
             </p>
 
             <h4 className="font-semibold text-[#1a5276]">4. Pagos</h4>

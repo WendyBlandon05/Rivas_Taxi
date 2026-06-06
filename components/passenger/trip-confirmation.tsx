@@ -15,8 +15,8 @@ import { formatTripCurrency } from "@/lib/currency"
 
 const CANCELLATION_REASONS = [
   { id: "plans_changed", label: "Mis planes cambiaron" },
-  { id: "found_alternative", label: "Encontre otra alternativa de transporte" },
-  { id: "wrong_details", label: "Ingrese datos incorrectos" },
+  { id: "found_alternative", label: "Encontré otra alternativa de transporte" },
+  { id: "wrong_details", label: "Ingresé datos incorrectos" },
   { id: "price_too_high", label: "El precio es muy alto" },
   { id: "emergency", label: "Tengo una emergencia" },
   { id: "other", label: "Otro motivo" }
@@ -467,7 +467,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
               Cancelar Reservación
             </DialogTitle>
             <DialogDescription>
-              Por favor, selecciona el motivo de la cancelacion. Esto nos ayuda a mejorar nuestro servicio.
+              Por favor, selecciona el motivo de la cancelación. Esto nos ayuda a mejorar nuestro servicio.
             </DialogDescription>
           </DialogHeader>
           
@@ -493,7 +493,7 @@ export function TripConfirmation({ tripData, onNewTrip }: TripConfirmationProps)
           
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
             <p className="text-amber-800">
-              <strong>Nota:</strong> Si cancelas con menos de 2 horas de anticipacion, podria aplicarse un cargo por cancelacion tardia.
+              <strong>Nota:</strong> Si cancelas con menos de 2 horas de anticipación, podría aplicarse un cargo por cancelación tardía.
             </p>
           </div>
           

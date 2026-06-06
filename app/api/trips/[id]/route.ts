@@ -152,7 +152,7 @@ export async function PATCH(
     if (updates.action === "driver_cancel") {
       const reason = String(updates.reason || "").trim()
       if (reason.length < 8) {
-        return NextResponse.json({ error: "Debes escribir un motivo de cancelacion mas detallado" }, { status: 400 })
+        return NextResponse.json({ error: "Debes escribir un motivo de cancelación más detallado" }, { status: 400 })
       }
 
       const { data: existingTrip, error: existingError } = await adminClient
@@ -341,7 +341,7 @@ export async function PATCH(
       if (error) {
         if (error.message?.includes("cancellation_reason")) {
           return NextResponse.json({
-            error: "Falta ejecutar el script 010_add_trip_cancellation_fields.sql en Supabase para guardar motivos de cancelacion."
+            error: "Falta ejecutar el script 010_add_trip_cancellation_fields.sql en Supabase para guardar motivos de cancelación."
           }, { status: 400 })
         }
 

@@ -311,7 +311,7 @@ export default function DriverDashboard() {
 
     const reason = cancelReason.trim()
     if (reason.length < 8) {
-      setCancelError("Escribe un motivo mas detallado para cancelar el viaje.")
+      setCancelError("Escribe un motivo más detallado para cancelar el viaje.")
       return
     }
 
@@ -688,7 +688,7 @@ export default function DriverDashboard() {
                 Cancelar viaje
               </DialogTitle>
               <DialogDescription>
-                El viaje actual quedara cancelado con tu motivo y el sistema intentara asignarlo a otro conductor.
+                El viaje actual quedará cancelado con tu motivo y el sistema intentará asignarlo a otro conductor.
               </DialogDescription>
             </DialogHeader>
             {cancelTrip && (
@@ -699,7 +699,7 @@ export default function DriverDashboard() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="cancel-reason">Motivo de cancelacion</Label>
+              <Label htmlFor="cancel-reason">Motivo de cancelación</Label>
               <Textarea
                 id="cancel-reason"
                 placeholder="Ejemplo: falla mecanica, emergencia personal, accidente en ruta..."
@@ -733,7 +733,7 @@ export default function DriverDashboard() {
                 ) : (
                   <XCircle className="w-4 h-4 mr-2" />
                 )}
-                Confirmar cancelacion
+                Confirmar cancelación
               </Button>
             </DialogFooter>
           </DialogContent>
