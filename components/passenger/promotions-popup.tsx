@@ -13,6 +13,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
+function trackDiscountBannerClick() {
+  if (typeof window === "undefined") return
+
+  const gtag = (window as typeof window & {
+    gtag?: (command: string, eventName: string, parameters?: Record<string, string>) => void
+  }).gtag
+
+  gtag?.("event", "btn_form_descuento", {
+    location: "promotion_popup",
+  })
+}
+
 export function PromotionsPopup() {
   const router = useRouter()
   const { user, isLoading } = useAuth()
@@ -49,7 +61,7 @@ export function PromotionsPopup() {
         <div className="relative h-40">
           <Image
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sddefault-s67OlZY118IKdFEWF1WRgizL15PdJv.jpg"
-            alt="Promocion especial"
+            alt="Promoción especial"
             fill
             className="object-cover"
           />
@@ -85,6 +97,7 @@ export function PromotionsPopup() {
               <Button 
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold"
                 onClick={() => {
+                  trackDiscountBannerClick()
                   setIsOpen(false)
                   router.push("/trips?coupon=BIENVENIDO20")
                 }}
@@ -96,7 +109,7 @@ export function PromotionsPopup() {
                 className="text-gray-500"
                 onClick={() => setIsOpen(false)}
               >
-                Tal vez mas tarde
+                Tal vez más tarde
               </Button>
             </div>
           </div>
