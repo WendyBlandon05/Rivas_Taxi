@@ -18,8 +18,24 @@ function TikTokIcon({ className }: { className?: string }) {
   )
 }
 
+function trackSocialClick(eventName: "btn_click_facebook" | "btn_click_tiktok", socialNetwork: "facebook" | "tiktok", linkUrl: string) {
+  if (typeof window === "undefined") return
+
+  const gtag = (window as typeof window & {
+    gtag?: (command: string, eventName: string, parameters?: Record<string, string>) => void
+  }).gtag
+
+  gtag?.("event", eventName, {
+    social_network: socialNetwork,
+    link_url: linkUrl,
+    location: "footer",
+  })
+}
+
 export function Footer() {
   const { t } = useLanguage()
+  const facebookUrl = "https://www.facebook.com/share/1ELPyg2ra8/"
+  const tiktokUrl = "https://www.tiktok.com/@pacific.coast.tax?_r=1&_t=ZS-96dNPChLfTV"
 
   return (
     <footer className="bg-[#0d2d44] text-white">
@@ -39,18 +55,20 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-4">
               <Link 
-                href="https://www.facebook.com/share/1ELPyg2ra8/" 
+                href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackSocialClick("btn_click_facebook", "facebook", facebookUrl)}
                 className="w-10 h-10 bg-[#1a5276] rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link 
-                href="https://www.tiktok.com/@pacific.coast.tax?_r=1&_t=ZS-96dNPChLfTV" 
+                href={tiktokUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackSocialClick("btn_click_tiktok", "tiktok", tiktokUrl)}
                 className="w-10 h-10 bg-[#1a5276] rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors"
                 aria-label="TikTok"
               >
