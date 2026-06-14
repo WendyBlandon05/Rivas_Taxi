@@ -8,7 +8,7 @@ import {
   Users, Car, DollarSign, TrendingUp, 
   Star, Bell, Settings, LogOut,
   Search, Filter, Download, RefreshCw, Plus, Menu, X, Eye, EyeOff, Copy, Check, UserPlus,
-  Fuel, Edit, Trash2, Camera
+  Fuel, Edit, Trash2, Camera, BarChart3
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -178,7 +178,7 @@ function isValidCedula(value: string) {
 export default function AdminDashboard() {
   const router = useRouter()
   const { user, profile, signOut } = useAuth()
-  const [activeTab, setActiveTab] = useState<"overview" | "trips" | "drivers" | "fuel">("overview")
+  const [activeTab, setActiveTab] = useState<"overview" | "trips" | "drivers" | "fuel" | "powerbi">("overview")
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [trips, setTrips] = useState<Trip[]>([])
@@ -670,6 +670,15 @@ export default function AdminDashboard() {
             <Fuel className="w-5 h-5" />
             Gasolina
           </button>
+          <button
+            onClick={() => { setActiveTab("powerbi"); setMobileMenuOpen(false) }}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+              activeTab === "powerbi" ? "bg-[#1a5276] text-white" : "text-white/70 hover:bg-white/10"
+            }`}
+          >
+            <BarChart3 className="w-5 h-5" />
+            Power BI
+          </button>
         </nav>
       </div>
 
@@ -732,6 +741,7 @@ export default function AdminDashboard() {
                   {activeTab === "trips" && "Gestion de Viajes"}
                   {activeTab === "drivers" && "Conductores"}
                   {activeTab === "fuel" && "Gasolina"}
+                  {activeTab === "powerbi" && "Power BI"}
                 </h1>
                 <p className="text-xs lg:text-sm text-gray-500 hidden sm:block">
                   {currentDateLabel}
@@ -1072,6 +1082,28 @@ export default function AdminDashboard() {
                       )}
                     </TableBody>
                   </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Power BI Tab */}
+          {activeTab === "powerbi" && (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Graficos de Google Analytics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-hidden rounded-lg border bg-white">
+                    <iframe
+                      title="Graficos de Google Analytics conectados con Power BI"
+                      src="https://app.powerbi.com/view?r=eyJrIjoiN2VhOWYyNDYtMjg2OS00YjU5LWE5MGUtMDRmMWU2ODVmNmI2IiwidCI6ImU0NzY0NmZlLWRhMjctNDUxOC04NDM2LTVmOGIxNThiYTEyNyIsImMiOjR9"
+                      className="h-[70vh] min-h-[520px] w-full"
+                      frameBorder="0"
+                      allowFullScreen
+                    />
+                  </div>
                 </CardContent>
               </Card>
             </div>
