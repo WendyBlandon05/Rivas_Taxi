@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import Link from "next/link"
-import { ArrowRight, ChevronLeft, ChevronRight, Clock, MapPin, ShieldCheck, Users } from "lucide-react"
+import { ChevronLeft, ChevronRight, Clock, MapPin, ShieldCheck, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -174,13 +173,7 @@ export function RecentTrips() {
                 </div>
               </div>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link href={`/trips?service=turistico`}>
-                  <Button className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white">
-                    {language === "en" ? "Book this route" : "Reservar esta ruta"}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+              <div className="mt-7">
                 <button
                   type="button"
                   onClick={nextSlide}
