@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ReviewForm } from "./review-form"
+import { BrandLogo } from "@/components/brand-logo"
 import { useAuth } from "@/contexts/auth-context"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -47,9 +48,7 @@ export function Header() {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-amber-500 rounded-full flex items-center justify-center">
-                <Car className="w-7 h-7 md:w-8 md:h-8 text-white" />
-              </div>
+              <BrandLogo className="h-12 w-12 md:h-14 md:w-14" />
               <span className="text-white font-bold text-lg md:text-xl tracking-wide">
                 PACIFIC COAST TAXI
               </span>

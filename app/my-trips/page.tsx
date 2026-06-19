@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { Car, Calendar, Clock, MapPin, Users, ChevronRight, History, CalendarClock, AlertCircle, Plus, Star, RefreshCw, XCircle, MessageSquare, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { BrandLogo } from "@/components/brand-logo"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -220,9 +221,7 @@ export default function MyTripsPage() {
         <div className="bg-[#1a5276] text-white py-8">
           <div className="container mx-auto px-4">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center">
-                <Car className="w-6 h-6 text-white" />
-              </div>
+              <BrandLogo className="h-10 w-10" />
               <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
             </Link>
             <h1 className="text-3xl font-bold mt-4">Mis Viajes</h1>
@@ -248,9 +247,7 @@ export default function MyTripsPage() {
       <div className="bg-[#1a5276] text-white py-8">
         <div className="container mx-auto px-4">
           <Link href="/" className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-6 h-6 text-white" />
-            </div>
+            <BrandLogo className="h-10 w-10" />
             <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
           </Link>
           <h1 className="text-3xl font-bold mt-4">Mis Viajes</h1>

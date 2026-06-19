@@ -619,14 +619,13 @@ export default function AdminDashboard() {
     <>
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
-          <div className="relative w-12 h-12">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202026-04-03%20at%201.01.53%20PM-Photoroom-fj1m5LpFsMIQWOVTdC2t55J8S3dCBm.svg"
-              alt="Logo"
-              fill
-              className="object-contain"
-            />
-          </div>
+          <Image
+            src="/apple-icon.png"
+            alt="Pacific Coast Taxi"
+            width={48}
+            height={48}
+            className="h-12 w-12 object-contain"
+          />
           <div>
             <p className="font-bold text-sm">PACIFIC COAST</p>
             <p className="text-xs text-white/70">Admin Dashboard</p>

@@ -3,11 +3,12 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Car, Eye, EyeOff, Lock } from "lucide-react"
+import { Eye, EyeOff, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { createClient } from "@/lib/supabase/client"
+import { BrandLogo } from "@/components/brand-logo"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -53,9 +54,7 @@ export default function ResetPasswordPage() {
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3">
-            <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-9 h-9 text-white" />
-            </div>
+            <BrandLogo className="h-16 w-16" />
             <span className="text-white font-bold text-2xl">PACIFIC COAST TAXI</span>
           </Link>
         </div>

@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, Car } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useAuth } from "@/contexts/auth-context"
+import { BrandLogo } from "@/components/brand-logo"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -97,9 +98,7 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center gap-3">
-            <div className="w-14 h-14 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-8 h-8 text-white" />
-            </div>
+            <BrandLogo className="h-14 w-14" />
             <span className="text-white font-bold text-xl">PACIFIC COAST TAXI</span>
           </Link>
         </div>

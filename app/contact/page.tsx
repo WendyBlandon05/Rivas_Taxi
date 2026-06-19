@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Car, ArrowLeft, MapPin, Clock, Shield, MessageCircle, Phone, Mail } from "lucide-react"
+import { BrandLogo } from "@/components/brand-logo"
+import { ArrowLeft, MapPin, Clock, Shield, MessageCircle, Phone, Mail } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 // WhatsApp icon component
@@ -67,9 +68,7 @@ export default function ContactPage() {
         <Link href="/" className="inline-flex items-center gap-3 text-white hover:text-amber-400 transition-colors">
           <ArrowLeft className="w-5 h-5" />
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-6 h-6 text-white" />
-            </div>
+            <BrandLogo className="h-10 w-10" />
             <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
           </div>
         </Link>

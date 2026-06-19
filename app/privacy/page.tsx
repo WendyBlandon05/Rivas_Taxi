@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowLeft, Car, FileText, Lock, ShieldCheck, UserCheck } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { BrandLogo } from "@/components/brand-logo"
 import { useLanguage } from "@/contexts/language-context"
 
 const sections = [
@@ -49,9 +50,7 @@ export default function PrivacyPage() {
         <Link href="/" className="inline-flex items-center gap-3 text-white hover:text-amber-400 transition-colors">
           <ArrowLeft className="w-5 h-5" />
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-6 h-6 text-white" />
-            </div>
+            <BrandLogo className="h-10 w-10" />
             <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
           </div>
         </Link>

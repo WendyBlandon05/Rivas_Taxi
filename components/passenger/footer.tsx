@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { Facebook, MapPin, Phone, Mail, Clock, Car } from "lucide-react"
+import { Facebook, MapPin, Phone, Mail, Clock } from "lucide-react"
+import { BrandLogo } from "@/components/brand-logo"
 import { useLanguage } from "@/contexts/language-context"
 
 // TikTok icon component since it's not in Lucide
@@ -44,9 +45,7 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
-                <Car className="w-7 h-7 text-white" />
-              </div>
+              <BrandLogo />
               <span className="font-bold text-lg">PACIFIC COAST TAXI</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">

@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Mail, Lock, Car } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/contexts/auth-context"
+import { BrandLogo } from "@/components/brand-logo"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -147,9 +148,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3">
-            <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-9 h-9 text-white" />
-            </div>
+            <BrandLogo className="h-16 w-16" />
             <span className="text-white font-bold text-2xl">PACIFIC COAST TAXI</span>
           </Link>
         </div>

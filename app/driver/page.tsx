@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { BrandLogo } from "@/components/brand-logo"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -426,7 +427,7 @@ export default function DriverDashboard() {
                 <SheetContent side="left" className="w-64 bg-[#0d2d44] text-white border-none p-6">
                   <SheetTitle className="sr-only">Menu del conductor</SheetTitle>
                   <div className="flex items-center gap-3 mb-8">
-                    <Car className="w-8 h-8" />
+                    <BrandLogo className="h-10 w-10" />
                     <div>
                       <p className="font-bold">PACIFIC COAST</p>
                       <p className="text-xs text-white/70">Panel Conductor</p>
@@ -448,7 +449,7 @@ export default function DriverDashboard() {
                 </SheetContent>
               </Sheet>
               
-              <Car className="w-8 h-8" />
+              <BrandLogo className="h-10 w-10" />
               <div className="hidden sm:block">
                 <h1 className="font-bold text-lg lg:text-xl">Pacific Coast Taxi</h1>
                 <p className="text-xs lg:text-sm text-blue-200">Panel del Conductor</p>

@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Car, Users, MapPin, Shield, Clock, Heart, Star, ChevronRight } from "lucide-react"
+import { Users, MapPin, Shield, Clock, Heart, Star, ChevronRight } from "lucide-react"
+import { BrandLogo } from "@/components/brand-logo"
 import { useLanguage } from "@/contexts/language-context"
 
 const clientImages = [
@@ -53,9 +54,7 @@ export default function AboutPage() {
       <header className="bg-[#1a5276] py-4 px-6 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-7 h-7 text-white" />
-            </div>
+            <BrandLogo />
             <span className="text-white font-bold text-xl">PACIFIC COAST TAXI</span>
           </Link>
           <Link href="/">
@@ -286,9 +285,7 @@ export default function AboutPage() {
       <footer className="bg-[#0d2f3f] py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center">
-              <Car className="w-5 h-5 text-white" />
-            </div>
+            <BrandLogo className="h-10 w-10" />
             <span className="text-white font-semibold">Pacific Coast Taxi</span>
           </div>
           <p className="text-gray-400 text-sm">
